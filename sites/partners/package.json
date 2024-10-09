@@ -34,7 +34,7 @@
     "@bloom-housing/ui-seeds": "1.17.0",
     "@heroicons/react": "^2.1.1",
     "@mapbox/mapbox-sdk": "^0.13.0",
-    "ag-grid-community": "^26.0.0",
+    "ag-grid-community": "^31.3.4",
     "ag-grid-react": "^26.0.0",
     "axios": "^0.28.0",
     "axios-cookiejar-support": "4.0.6",
