@@ -8,13 +8,17 @@ import compression from 'compression';
 import { json } from 'express';
 import { AppModule } from './modules/app.module';
 import { CustomExceptionFilter } from './utilities/custom-exception-filter';
+import { WinstonModule } from 'nest-winston';
+import { instance } from './logger/winston.logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger:
       process.env.NODE_ENV === 'development'
         ? ['error', 'warn', 'log', 'debug']
-        : ['error', 'warn'],
+        : WinstonModule.createLogger({
+            instance: instance,
+          }),
   });
   const allowList = process.env.CORS_ORIGINS || [];
   const allowListRegex = process.env.CORS_REGEX

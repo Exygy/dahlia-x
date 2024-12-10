@@ -46,6 +46,9 @@ module.exports = withBundleAnalyzer({
     maintenanceWindow: process.env.MAINTENANCE_WINDOW,
     reCaptchaKey: process.env.RECAPTCHA_KEY,
     maxClosedListings: process.env.MAX_CLOSED_LISTINGS,
+    DD_APPLICATION_ID: process.env.DD_APPLICATION_ID,
+    DD_CLIENT_TOKEN: process.env.DD_CLIENT_TOKEN,
+    DD_SITE: process.env.DD_SITE,
   },
   i18n: {
     locales: process.env.LANGUAGES ? process.env.LANGUAGES.split(",") : ["en"],

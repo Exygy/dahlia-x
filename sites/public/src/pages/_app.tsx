@@ -1,6 +1,7 @@
 import "@bloom-housing/ui-components/src/global/css-imports.scss"
 import "@bloom-housing/ui-components/src/global/app-css.scss"
 import "@bloom-housing/ui-seeds/src/global/app-css.scss"
+import { datadogRum } from "@datadog/browser-rum"
 import React, { useEffect, useMemo, useState } from "react"
 import type { AppProps } from "next/app"
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3"
@@ -29,6 +30,20 @@ import LinkComponent from "../components/core/LinkComponent"
 import "../../styles/overrides.scss"
 
 function BloomApp({ Component, router, pageProps }: AppProps) {
+  datadogRum.init({
+    applicationId: process.env.DD_APPLICATION_ID,
+    clientToken: process.env.DD_CLIENT_TOKEN,
+    site: process.env.DD_SITE,
+    service: "public-site",
+    env: "core_prod",
+    sessionSampleRate: 100,
+    sessionReplaySampleRate: 20,
+    trackUserInteractions: true,
+    trackResources: true,
+    trackLongTasks: true,
+    defaultPrivacyLevel: "mask-user-input",
+  })
+
   const { locale } = router
   //  const initialized = useState(true)
   const [application, setApplication] = useState(() => {

@@ -2277,6 +2277,26 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@datadog/browser-core@5.32.0":
+  version "5.32.0"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-core/-/browser-core-5.32.0.tgz#2b13051588db0b6f5616f7f28d59df4ff527ebec"
+  integrity sha512-+RnQZRda/XwjP2v8TZHIIbZItS1xlRYVs7OmueaA+/MItj0DiL8hZ4uIj7eLsNUXGS0qsiGHXWkaBZE2HfWuvQ==
+
+"@datadog/browser-rum-core@5.32.0":
+  version "5.32.0"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum-core/-/browser-rum-core-5.32.0.tgz#2c0aac18e80668fe70f70c9e367939ee36c83f3e"
+  integrity sha512-SJb8Qmixc82+m613kR3aO31qOD+EhbVY8eMEJ8hYMs1r0LrWGbmEWFWmA86239W5pD4QyRy9ruvs5O/I0S6c1A==
+  dependencies:
+    "@datadog/browser-core" "5.32.0"
+
+"@datadog/browser-rum@^5.32.0":
+  version "5.32.0"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum/-/browser-rum-5.32.0.tgz#676690d74c1c9b42fd573695e4ffd73f5535387c"
+  integrity sha512-Okiu/zTV/sgglGsMAtznqcoy+iwXDjGQ3PkHwZw2jAY/clDcoLbaOPGXeIHXh15E/zk8YALHkC/RW58DFv29lg==
+  dependencies:
+    "@datadog/browser-core" "5.32.0"
+    "@datadog/browser-rum-core" "5.32.0"
+
 "@datadog/libdatadog@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@datadog/libdatadog/-/libdatadog-0.2.2.tgz#ac02c76ac9a38250dca740727c7cdf00244ce3d3"

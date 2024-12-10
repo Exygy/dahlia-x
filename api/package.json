@@ -70,6 +70,7 @@
     "handlebars": "~4.7.8",
     "jsonwebtoken": "~9.0.1",
     "lodash": "~4.17.21",
+    "nest-winston": "^1.9.7",
     "node-polyglot": "~2.5.0",
     "passport": "~0.6.0",
     "passport-jwt": "~4.0.1",
@@ -80,7 +81,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "~7.8.1",
     "swagger-axios-codegen": "~0.15.12",
-    "twilio": "^4.15.0"
+    "twilio": "^4.15.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.5",

@@ -32,6 +32,7 @@
     "@bloom-housing/shared-helpers": "^7.7.1",
     "@bloom-housing/ui-components": "12.4.0",
     "@bloom-housing/ui-seeds": "1.18.1",
+    "@datadog/browser-rum": "^5.32.0",
     "@heroicons/react": "^2.1.1",
     "@mapbox/mapbox-sdk": "^0.13.0",
     "@sentry/nextjs": "^7.61.0",
