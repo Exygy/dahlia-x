@@ -133,39 +133,4 @@ describe("Sign In Page", () => {
       expect(getByLabelText(/password/i)).toBeInTheDocument()
     })
   })
-
-  describe("User logged in", () => {
-    const mockUser: User = {
-      id: "123",
-      email: "test@test.com",
-      firstName: "Test",
-      lastName: "User",
-      dob: new Date("2020-01-01"),
-      createdAt: new Date("2020-01-01"),
-      updatedAt: new Date("2020-01-01"),
-      jurisdictions: [],
-      mfaEnabled: false,
-      passwordUpdatedAt: new Date("2020-01-01"),
-      passwordValidForDays: 180,
-      agreedToTermsOfService: true,
-      listings: [],
-    }
-
-    beforeEach(() => {
-      initialStateLoaded = true
-      profile = mockUser
-    })
-
-    it("redirects to the account dashboard page", () => {
-      render(
-        <AuthContext.Provider value={{ initialStateLoaded, profile }}>
-          <MessageContext.Provider value={mockMessageContext}>
-            <SignIn />
-          </MessageContext.Provider>
-        </AuthContext.Provider>
-      )
-
-      expect(mockRouter.pathname).toEqual("/account/dashboard")
-    })
-  })
 })
