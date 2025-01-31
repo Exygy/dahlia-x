@@ -2,20 +2,8 @@ import React from "react"
 import { render, fireEvent } from "@testing-library/react"
 import { useRouter } from "next/router"
 import { MessageContext, AuthContext } from "@bloom-housing/shared-helpers"
-import { GenericRouter } from "@bloom-housing/ui-components"
 import { User } from "../../../../shared-helpers/src/types/backend-swagger"
-
-import SignIn from "../../src/pages/sign-in"
-
-const mockRouter: GenericRouter = {
-  pathname: "",
-  asPath: "",
-  back: jest.fn(),
-  push(url: string) {
-    this.pathname = url
-    this.asPath = url
-  },
-}
+import { SignIn as SignInComponent } from "../../src/pages/sign-in"
 
 let initialStateLoaded = false
 let profile: User | undefined
@@ -38,8 +26,7 @@ describe("Sign In Page", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockRouter.push("")
-    ;(useRouter as jest.Mock).mockReturnValue(mockRouter)
+    ;(useRouter as jest.Mock).mockReturnValue("")
 
     mockMessageContext = {
       toastMessagesRef: { current: [] },
@@ -50,7 +37,7 @@ describe("Sign In Page", () => {
   const renderSignInPage = () =>
     render(
       <MessageContext.Provider value={mockMessageContext}>
-        <SignIn />
+        <SignInComponent />
       </MessageContext.Provider>
     )
 
@@ -124,13 +111,13 @@ describe("Sign In Page", () => {
       const { getByLabelText, getByText } = render(
         <AuthContext.Provider value={{ initialStateLoaded, profile }}>
           <MessageContext.Provider value={mockMessageContext}>
-            <SignIn />
+            <SignInComponent />
           </MessageContext.Provider>
         </AuthContext.Provider>
       )
       expect(getByText("Sign In", { selector: "h1" })).toBeInTheDocument()
-      expect(getByLabelText(/email/i)).toBeInTheDocument()
-      expect(getByLabelText(/password/i)).toBeInTheDocument()
+      expect(getByLabelText("Email")).toBeInTheDocument()
+      expect(getByLabelText("Password")).toBeInTheDocument()
     })
   })
 })
