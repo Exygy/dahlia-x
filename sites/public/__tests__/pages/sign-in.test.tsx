@@ -10,6 +10,18 @@ let profile: User | undefined
 
 let originalShowPwdless
 
+const TOAST_MESSAGE = {
+  toastMessagesRef: { current: [] },
+  addToast: jest.fn(),
+}
+
+const renderSignInPage = () =>
+  render(
+    <MessageContext.Provider value={TOAST_MESSAGE}>
+      <SignInComponent />
+    </MessageContext.Provider>
+  )
+
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),
 }))
@@ -19,29 +31,10 @@ beforeAll(() => {
 })
 
 describe("Sign In Page", () => {
-  let mockMessageContext: {
-    toastMessagesRef: {
-      current: unknown[]
-    }
-    addToast: () => void
-  }
-
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useRouter as jest.Mock).mockReturnValue("")
-
-    mockMessageContext = {
-      toastMessagesRef: { current: [] },
-      addToast: jest.fn(),
-    }
   })
-
-  const renderSignInPage = () =>
-    render(
-      <MessageContext.Provider value={mockMessageContext}>
-        <SignInComponent />
-      </MessageContext.Provider>
-    )
 
   it("renders all page elements including fields, buttons and links", () => {
     const { getByText, getByTestId, getByLabelText, getByRole } = renderSignInPage()
@@ -109,7 +102,7 @@ describe("Sign In Page", () => {
     it("shows the sign-in form", () => {
       const { getByLabelText, getByText } = render(
         <AuthContext.Provider value={{ initialStateLoaded, profile }}>
-          <MessageContext.Provider value={mockMessageContext}>
+          <MessageContext.Provider value={TOAST_MESSAGE}>
             <SignInComponent />
           </MessageContext.Provider>
         </AuthContext.Provider>
@@ -119,83 +112,89 @@ describe("Sign In Page", () => {
       expect(getByLabelText("Password")).toBeInTheDocument()
     })
   })
+})
 
-  describe("Passwordless login", () => {
-    beforeEach(() => {
-      originalShowPwdless = process.env.showPwdless
-      process.env.showPwdless = "TRUE"
-    })
+describe("Passwordless Sign In page", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    ;(useRouter as jest.Mock).mockReturnValue("")
+  })
 
-    afterEach(() => {
-      process.env.showPwdless = originalShowPwdless
-    })
+  const renderSignInPage = () =>
+    render(
+      <MessageContext.Provider value={TOAST_MESSAGE}>
+        <SignInComponent />
+      </MessageContext.Provider>
+    )
 
-    it("renders all page elements including fields, buttons and links", () => {
-      const { getByText, getByLabelText, getByTestId, getByRole } = renderSignInPage()
+  beforeEach(() => {
+    originalShowPwdless = process.env.showPwdless
+    process.env.showPwdless = "TRUE"
+  })
 
-      expect(getByText("Sign In", { selector: "h1" })).toBeInTheDocument()
-      expect(
-        getByText("Enter your email and we'll send you a code to sign in.", { selector: "p" })
-      ).toBeInTheDocument()
+  afterEach(() => {
+    process.env.showPwdless = originalShowPwdless
+  })
+
+  it("renders all page elements including fields, buttons and links", () => {
+    const { getByText, getByLabelText, getByTestId, getByRole } = renderSignInPage()
+
+    expect(getByText("Sign In", { selector: "h1" })).toBeInTheDocument()
+    expect(
+      getByText("Enter your email and we'll send you a code to sign in.", { selector: "p" })
+    ).toBeInTheDocument()
+    expect(getByLabelText("Email")).toBeInTheDocument()
+    expect(getByTestId("sign-in-email-field")).toBeInTheDocument()
+
+    expect(getByRole("button", { name: "Get code to sign in" })).toBeInTheDocument()
+    expect(getByRole("button", { name: "Use your password instead" })).toBeInTheDocument()
+
+    expect(getByText("Don't have an account?", { selector: "h2" })).toBeInTheDocument()
+    expect(
+      getByText("Sign up quickly with no need to remember any passwords.", { selector: "div" })
+    ).toBeInTheDocument()
+    expect(getByRole("link", { name: /create account/i })).toBeInTheDocument()
+  })
+
+  it("shows error alert and email validation error after clicking 'Get code to sign in' button without filling out email field", async () => {
+    const { findByText, getByRole } = renderSignInPage()
+
+    fireEvent.click(getByRole("button", { name: "Get code to sign in" }))
+    expect(
+      await findByText("There are errors you'll need to resolve before moving on.")
+    ).toBeInTheDocument()
+    expect(await findByText("Please enter your login email")).toBeInTheDocument()
+  })
+
+  it("shows correct page elements after clicking 'Use your password instead' button", async () => {
+    const { getByRole, getByLabelText, getByTestId } = renderSignInPage()
+
+    fireEvent.click(getByRole("button", { name: "Use your password instead" }))
+
+    await waitFor(() => {
       expect(getByLabelText("Email")).toBeInTheDocument()
       expect(getByTestId("sign-in-email-field")).toBeInTheDocument()
+      expect(getByLabelText("Password")).toBeInTheDocument()
+      expect(getByTestId("sign-in-password-field")).toBeInTheDocument()
+      expect(getByRole("button", { name: "Get a code instead" })).toBeInTheDocument()
+    })
+  })
 
-      expect(getByRole("button", { name: "Get code to sign in" })).toBeInTheDocument()
+  it("shows correct page elements after clicking 'Use your password instead' button and then clicking 'Get a code instead' button", async () => {
+    const { findByRole, getByRole, getByLabelText, getByTestId, queryByLabelText, queryByTestId } =
+      renderSignInPage()
+
+    fireEvent.click(getByRole("button", { name: "Use your password instead" }))
+    expect(await findByRole("button", { name: "Get a code instead" })).toBeInTheDocument()
+
+    fireEvent.click(getByRole("button", { name: "Get a code instead" }))
+
+    await waitFor(() => {
+      expect(getByLabelText("Email")).toBeInTheDocument()
+      expect(getByTestId("sign-in-email-field")).toBeInTheDocument()
+      expect(queryByLabelText("Password")).not.toBeInTheDocument()
+      expect(queryByTestId("sign-in-password-field")).not.toBeInTheDocument()
       expect(getByRole("button", { name: "Use your password instead" })).toBeInTheDocument()
-
-      expect(getByText("Don't have an account?", { selector: "h2" })).toBeInTheDocument()
-      expect(
-        getByText("Sign up quickly with no need to remember any passwords.", { selector: "div" })
-      ).toBeInTheDocument()
-      expect(getByRole("link", { name: /create account/i })).toBeInTheDocument()
-    })
-
-    it("shows error alert and email validation error after clicking 'Get code to sign in' button without filling out email field", async () => {
-      const { findByText, getByRole } = renderSignInPage()
-
-      fireEvent.click(getByRole("button", { name: "Get code to sign in" }))
-      expect(
-        await findByText("There are errors you'll need to resolve before moving on.")
-      ).toBeInTheDocument()
-      expect(await findByText("Please enter your login email")).toBeInTheDocument()
-    })
-
-    it("shows correct page elements after clicking 'Use your password instead' button", async () => {
-      const { getByRole, getByLabelText, getByTestId } = renderSignInPage()
-
-      fireEvent.click(getByRole("button", { name: "Use your password instead" }))
-
-      await waitFor(() => {
-        expect(getByLabelText("Email")).toBeInTheDocument()
-        expect(getByTestId("sign-in-email-field")).toBeInTheDocument()
-        expect(getByLabelText("Password")).toBeInTheDocument()
-        expect(getByTestId("sign-in-password-field")).toBeInTheDocument()
-        expect(getByRole("button", { name: "Get a code instead" })).toBeInTheDocument()
-      })
-    })
-
-    it("shows correct page elements after clicking 'Use your password instead' button and then clicking 'Get a code instead' button", async () => {
-      const {
-        findByRole,
-        getByRole,
-        getByLabelText,
-        getByTestId,
-        queryByLabelText,
-        queryByTestId,
-      } = renderSignInPage()
-
-      fireEvent.click(getByRole("button", { name: "Use your password instead" }))
-      expect(await findByRole("button", { name: "Get a code instead" })).toBeInTheDocument()
-
-      fireEvent.click(getByRole("button", { name: "Get a code instead" }))
-
-      await waitFor(() => {
-        expect(getByLabelText("Email")).toBeInTheDocument()
-        expect(getByTestId("sign-in-email-field")).toBeInTheDocument()
-        expect(queryByLabelText("Password")).not.toBeInTheDocument()
-        expect(queryByTestId("sign-in-password-field")).not.toBeInTheDocument()
-        expect(getByRole("button", { name: "Use your password instead" })).toBeInTheDocument()
-      })
     })
   })
 })
