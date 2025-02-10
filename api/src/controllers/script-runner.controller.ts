@@ -208,4 +208,17 @@ export class ScirptRunnerController {
   async addFeatureFlags(@Request() req: ExpressRequest): Promise<SuccessDTO> {
     return await this.scriptRunnerService.addFeatureFlags(req);
   }
+
+  @Put('addMultiselectIdToApplications')
+  @ApiOperation({
+    summary:
+      'A script that adds multiselectQuestionId to all preferences in applications',
+    operationId: 'addMultiselectIdToApplications',
+  })
+  @ApiOkResponse({ type: SuccessDTO })
+  async addMultiselectIdToApplications(
+    @Request() req: ExpressRequest,
+  ): Promise<SuccessDTO> {
+    return await this.scriptRunnerService.addMultiselectIdToApplications(req);
+  }
 }

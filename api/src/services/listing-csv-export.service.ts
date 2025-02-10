@@ -575,7 +575,7 @@ export class ListingCsvExporterService implements CsvExporterServiceInterface {
           path: 'listingMultiselectQuestions',
           label: 'Housing Preferences',
           format: (val: ListingMultiselectQuestion[]): string => {
-            return val
+            const value = val
               .filter(
                 (question) =>
                   question.multiselectQuestions.applicationSection ===
@@ -583,6 +583,8 @@ export class ListingCsvExporterService implements CsvExporterServiceInterface {
               )
               .map((question) => question.multiselectQuestions.text)
               .join(',');
+            console.log(value);
+            return value;
           },
         },
         {

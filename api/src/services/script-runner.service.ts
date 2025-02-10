@@ -515,6 +515,38 @@ export class ScriptRunnerService {
     return { success: true };
   }
 
+  async addMultiselectIdToApplications(
+    req: ExpressRequest,
+  ): Promise<SuccessDTO> {
+    const requestingUser = mapTo(User, req['user']);
+    // await this.markScriptAsRunStart(
+    //   'add MultiselectId to Applications',
+    //   requestingUser,
+    // );
+    console.log('here');
+    const applications = await this.prisma.applications.findMany({
+      select: {
+        id: true,
+        preferences: true,
+      },
+      where: {
+        preferences: {
+          array_contains: {
+            path: ['key'],
+            // path: ['multiselectQuestionId'],
+            equals: 'Work in the city',
+          },
+        },
+      },
+    });
+    console.log(applications);
+    // await this.markScriptAsComplete(
+    //   'add MultiselectId to Applications',
+    //   requestingUser,
+    // );
+    return { success: true };
+  }
+
   /**
     this is simply an example
   */

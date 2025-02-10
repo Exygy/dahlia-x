@@ -341,7 +341,7 @@ export const constructMultiselectQuestionHeaders = (
     .filter((question) => question.applicationSection === applicationSection)
     .forEach((question) => {
       headers.push({
-        path: `${applicationSection}.${question.text}.claimed`,
+        path: `${applicationSection}.${question.id}.claimed`,
         label: `${labelString} ${question.text}`,
         format: (val: any): string => {
           const claimedString: string[] = [];

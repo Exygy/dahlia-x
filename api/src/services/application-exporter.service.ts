@@ -273,7 +273,9 @@ export class ApplicationExporterService {
                         parsePreference = false;
                         // there aren't typically many preferences, but if there, then a object map should be created and used
                         const preference = preferences.find(
-                          (preference) => preference.key === curr,
+                          (preference) =>
+                            preference.multiselectQuestionId === curr ||
+                            preference.key === curr,
                         );
                         multiselectQuestionValue = true;
                         return preference;
