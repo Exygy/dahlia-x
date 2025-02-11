@@ -523,23 +523,61 @@ export class ScriptRunnerService {
     //   'add MultiselectId to Applications',
     //   requestingUser,
     // );
-    console.log('here');
-    const applications = await this.prisma.applications.findMany({
-      select: {
-        id: true,
-        preferences: true,
+    const jurisdictionId = await this.prisma.jurisdictions.findFirst({
+      select: { id: true },
+      where: { name: 'Alameda' },
+    });
+    console.log(jurisdictionId);
+    const alamedaListingsWithPreferences = await this.prisma.listings.findMany({
+      // select: { id: true, name: true, listingMultiselectQuestions: true },
+      include: {
+        listingMultiselectQuestions: {
+          include: { multiselectQuestions: true },
+        },
       },
       where: {
-        preferences: {
-          array_contains: {
-            path: ['key'],
-            // path: ['multiselectQuestionId'],
-            equals: 'Work in the city',
+        jurisdictionId: jurisdictionId.id,
+        listingMultiselectQuestions: {
+          some: {
+            listingId: { gt: '00000000-0000-0000-0000-000000000000' },
           },
         },
       },
     });
-    console.log(applications);
+    const listingIds = alamedaListingsWithPreferences.map(
+      (listing) => `'${listing.id}'`,
+    );
+    const rawQuery = `select id, listing_id, preferences from
+    (select id, listing_id, preferences, preferences->1->'multiselectQuestionId' as multiselectQuestionId from applications
+    where preferences->1 is not null) inner_query
+    where multiselectQuestionId is null
+    AND listing_id in (${listingIds})`;
+    const applications = (await this.prisma.$queryRawUnsafe(rawQuery)) as any[];
+    let foundPreferenceCount = 0;
+    let notFoundPreferenceCount = 0;
+    let applicationCount = 0;
+    for (const app of applications) {
+      for (const preference of app.preferences) {
+        const foundListing = alamedaListingsWithPreferences.find(
+          (listing) => listing.id === app.listing_id,
+        );
+        // console.log(foundListing);
+        const foundMultiSelect = foundListing.listingMultiselectQuestions.find(
+          (lmq) => lmq.multiselectQuestions.text === preference.key,
+        );
+        if (!foundMultiSelect) {
+          notFoundPreferenceCount++;
+        } else {
+          foundPreferenceCount++;
+        }
+      }
+      applicationCount++;
+      if (applicationCount % 20 === 0) {
+        console.log('not found', notFoundPreferenceCount);
+        console.log('found', foundPreferenceCount);
+      }
+    }
+    // console.log(applications);
     // await this.markScriptAsComplete(
     //   'add MultiselectId to Applications',
     //   requestingUser,
