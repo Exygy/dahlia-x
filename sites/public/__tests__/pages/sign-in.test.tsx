@@ -198,3 +198,8 @@ describe("Passwordless Sign In page", () => {
     })
   })
 })
+
+describe("Mandated accounts", () => {
+  it.todo("Desktop test(s)")
+  it.todo("Mobile test(s)")
+})
