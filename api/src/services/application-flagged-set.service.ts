@@ -640,11 +640,45 @@ export class ApplicationFlaggedSetService implements OnModuleInit {
           const emailFlagged = flaggedGroup.find(
             (group) => group.type === RuleEnum.email,
           );
+          const phoneNumberFlagged = flaggedGroup.find(
+            (group) => group.type === RuleEnum.phoneNumber,
+          );
+
           // all name flags need to be sorted alphabetically so they are the same every time
           const nameFlagged = flaggedGroup
             .filter((group) => group.type === RuleEnum.nameAndDOB)
             ?.sort((flagA, flagB) => flagB.key.localeCompare(flagA.key));
-          if (!emailFlagged) {
+          if (emailFlagged && phoneNumberFlagged && nameFlagged) {
+            return {
+              ruleKey: `${emailFlagged.key}-${
+                phoneNumberFlagged.key
+              }-${nameFlagged.map((flag) => flag.key).join('-')}`,
+              rule: RuleEnum.combination,
+              applications: uniqueIds,
+            };
+          } else if (emailFlagged && phoneNumberFlagged) {
+            return {
+              ruleKey: `${emailFlagged.key}-${phoneNumberFlagged.key}`,
+              rule: RuleEnum.combination,
+              applications: uniqueIds,
+            };
+          } else if (emailFlagged && nameFlagged) {
+            return {
+              ruleKey: `${emailFlagged.key}-${nameFlagged
+                .map((flag) => flag.key)
+                .join('-')}`,
+              rule: RuleEnum.combination,
+              applications: uniqueIds,
+            };
+          } else if (phoneNumberFlagged && nameFlagged) {
+            return {
+              ruleKey: `${phoneNumberFlagged.key}-${nameFlagged
+                .map((flag) => flag.key)
+                .join('-')}`,
+              rule: RuleEnum.combination,
+              applications: uniqueIds,
+            };
+          } else if (nameFlagged) {
             // In the rare case that more than one name/dob matches but not email it should still be nameAndDOB
             return {
               ruleKey: `${nameFlagged.map((flag) => flag.key).join('-')}`,
@@ -652,13 +686,6 @@ export class ApplicationFlaggedSetService implements OnModuleInit {
               applications: uniqueIds,
             };
           }
-          return {
-            ruleKey: `${emailFlagged.key}-${nameFlagged
-              .map((flag) => flag.key)
-              .join('-')}`,
-            rule: RuleEnum.combination,
-            applications: uniqueIds,
-          };
         }
       });
       // Remove unused application flagged sets that are no longer valid
@@ -749,6 +776,8 @@ export class ApplicationFlaggedSetService implements OnModuleInit {
         });
       }
     }
+
+    this.logger.warn(`flag set updates complete`);
 
     return {
       success: true,
