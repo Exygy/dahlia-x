@@ -41,7 +41,7 @@
     "dayjs": "^1.10.7",
     "dd-trace": "^5.30.0",
     "dotenv": "^8.2.0",
-    "markdown-to-jsx": "^6.11.4",
+    "markdown-to-jsx": "^7.4.0",
     "nanoid": "^3.1.12",
     "next": "^13.2.4",
     "qs": "^6.10.1",
