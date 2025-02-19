@@ -27,7 +27,9 @@
 }
 
 .listing-tags {
+  margin-bottom: calc(-1 * var(--seeds-s1));
   span {
+    margin-bottom: var(--seeds-s1);
     &:not(:last-child) {
       margin-inline-end: var(--seeds-s2);
     }

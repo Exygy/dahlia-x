@@ -1,5 +1,19 @@
+.listing-directory {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  font-family: var(--seeds-font-alt-sans);
+}
+
 .content-wrapper {
-  max-width: var(--seeds-width-5xl);
+  width: 100%;
+  max-width: var(--seeds-screen-lg);
   display: flex;
   flex-direction: column;
+  @media (--sm-and-up) {
+    margin-inline: var(--seeds-s2);
+  }
+  @media (--sm-and-up) {
+    padding-block: var(--seeds-spacer-container);
+  }
 }

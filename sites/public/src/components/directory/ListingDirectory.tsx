@@ -39,13 +39,14 @@ export const ListingDirectory = (props: ListingDirectoryProps) => {
 
       <MetaTags title={t("nav.siteTitle")} image={metaImage} description={metaDescription} />
       <PageHeader title={t("pageTitle.rent")} />
-      <MaxWidthLayout>
+
+      <div className={styles["listing-directory"]}>
         <div className={styles["content-wrapper"]}>
           {props.openListings.map((listing, index) => {
             return <ListingCard listing={listing} key={index} />
           })}
         </div>
-      </MaxWidthLayout>
+      </div>
     </Layout>
   )
 }

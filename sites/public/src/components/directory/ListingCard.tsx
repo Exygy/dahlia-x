@@ -1,5 +1,5 @@
 import React from "react"
-import ClockIcon from "@heroicons/react/24/solid/ClockIcon"
+import InfoIcon from "@heroicons/react/24/solid/InformationCircleIcon"
 import { Listing } from "@bloom-housing/shared-helpers/src/types/backend-swagger"
 import styles from "./ListingCard.module.scss"
 import { imageUrlFromListing, oneLineAddress } from "@bloom-housing/shared-helpers"
@@ -43,7 +43,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
           <div className={`${styles["tags"]}`}>
             {listingTags.map((tag, index) => {
               return (
-                <Tag variant={tag.variant} key={index}>
+                <Tag variant={tag.variant} key={index} className={styles["tag"]}>
                   {tag.title}
                 </Tag>
               )
@@ -68,7 +68,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
           customIcon={
             statusContent.length ? (
               <Icon size="md" className={styles["primary-color-icon"]} aria-hidden={true}>
-                <ClockIcon />
+                <InfoIcon />
               </Icon>
             ) : (
               <></>
@@ -82,8 +82,13 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
               })}
             </div>
 
-            <Button href="" size={"sm"} variant={"primary-outlined"}>
-              See details
+            <Button
+              href={`/listing/${listing.id}/${listing.urlSlug}`}
+              size={"sm"}
+              variant={"primary-outlined"}
+              className={styles["see-details"]}
+            >
+              {t("t.seeDetails")}
             </Button>
           </div>
         </Message>
