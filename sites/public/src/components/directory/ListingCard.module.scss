@@ -21,7 +21,7 @@
   }
 
   .image {
-    width: calc(100% / 5 * 2);
+    width: calc(100% / 7 * 3);
     @media (--md-down) {
       width: 100%;
     }
@@ -40,7 +40,7 @@
     background-position: center;
   }
   .details {
-    width: calc(100% / 5 * 3);
+    width: calc(100% / 7 * 4);
     padding-inline-start: var(--seeds-spacer-content);
     @media (--md-down) {
       width: 100%;
