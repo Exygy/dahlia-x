@@ -74,7 +74,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
           />
         </div>
 
-        {!!statusContent.length && (
+        {statusContent.length > 0 ? (
           <Message
             className={styles["due-date"]}
             customIcon={
@@ -96,6 +96,10 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
               <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
             </div>
           </Message>
+        ) : (
+          <div className={`${styles["action-show-lg"]} ${styles["actions-container"]}`}>
+            {actions.map((action) => action)}
+          </div>
         )}
 
         <div className={styles["action-hide-lg"]}>{actions.map((action) => action)}</div>
