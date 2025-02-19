@@ -30,11 +30,11 @@
     min-height: var(--seeds-s64);
     @media (--md-down) {
       min-height: var(--seeds-s96);
+      max-height: 32rem;
     }
     @media (--sm-only) {
       min-height: var(--seeds-s72);
     }
-    max-height: 32rem;
     height: 100%;
     background-size: cover;
     background-position: center;
