@@ -104,7 +104,10 @@ export const getListingApplicationStatus = (listing: Listing): StatusBarType => 
     content = t("listings.applicationFCFS")
   }
 
-  if (listing.reviewOrderType === ReviewOrderTypeEnum.waitlist) {
+  if (
+    listing.reviewOrderType === ReviewOrderTypeEnum.waitlist &&
+    listing.status !== ListingsStatusEnum.closed
+  ) {
     subContent = content
     content = t("listings.waitlist.open")
   }
