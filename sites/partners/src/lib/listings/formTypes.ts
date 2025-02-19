@@ -70,6 +70,7 @@ export type FormListing = Omit<Listing, "countyCode"> & {
     day: string
     year: string
   }
+  marketingStartDate?: number
   reviewOrderQuestion?: string
   lotteryOptInQuestion?: YesNoEnum
   listingAvailabilityQuestion?: string

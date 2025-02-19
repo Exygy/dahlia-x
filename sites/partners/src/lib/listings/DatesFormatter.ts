@@ -1,7 +1,11 @@
-import { YesNoEnum } from "@bloom-housing/shared-helpers/src/types/backend-swagger"
+import {
+  MarketingTypeEnum,
+  MarketingSeasonEnum,
+  YesNoEnum,
+} from "@bloom-housing/shared-helpers/src/types/backend-swagger"
 import Formatter from "./Formatter"
 import { createDate, createTime } from "../helpers"
-
+import dayjs from "dayjs"
 export default class DatesFormatter extends Formatter {
   /** Set dates/times for certain fields */
   process() {
@@ -23,6 +27,21 @@ export default class DatesFormatter extends Formatter {
           : postmarkByDateFormatted
     } else {
       this.data.postmarkedApplicationsReceivedByDate = null
+    }
+
+    this.data.marketingType = MarketingTypeEnum[this.data.marketingType]
+
+    if (this.data.marketingType === MarketingTypeEnum.comingSoon) {
+      this.data.marketingDate = this.data.marketingStartDate
+        ? dayjs().set("year", this.data.marketingStartDate).toDate()
+        : null
+
+      this.data.marketingSeason = this.data.marketingSeason
+        ? MarketingSeasonEnum[this.data.marketingSeason]
+        : null
+    } else {
+      this.data.marketingDate = null
+      this.data.marketingSeason = null
     }
   }
 }

@@ -15,6 +15,7 @@ import {
 import {
   ApplicationMethodsTypeEnum,
   ListingEventsTypeEnum,
+  MarketingTypeEnum,
 } from '@prisma/client';
 import { views } from './listing.service';
 import { PrismaService } from './prisma.service';
@@ -672,6 +673,44 @@ export class ListingCsvExporterService implements CsvExporterServiceInterface {
           label: 'Waitlist',
           format: this.formatYesNo,
         },
+      ],
+    );
+    if (
+      this.doAnyJurisdictionHaveFeatureFlagSet(
+        user.jurisdictions,
+        FeatureFlagEnum.enableMarketingStatus,
+      )
+    ) {
+      headers.push(
+        ...[
+          {
+            path: 'marketingType',
+            label: 'Marketing Status',
+            format: (val: string): string => {
+              if (!val) return '';
+              return val === MarketingTypeEnum.marketing
+                ? 'Marketing'
+                : 'Under Construction';
+            },
+          },
+          {
+            path: 'marketingSeason',
+            label: 'Marketing Season',
+            format: (val: string): string => {
+              if (!val) return '';
+              return val.charAt(0).toUpperCase() + val.slice(1);
+            },
+          },
+          {
+            path: 'marketingDate',
+            label: 'Marketing Start Date',
+            format: (val: string): string => formatLocalDate(val, 'YYYY'),
+          },
+        ],
+      );
+    }
+    headers.push(
+      ...[
         {
           path: 'leasingAgentName',
           label: 'Leasing Agent Name',

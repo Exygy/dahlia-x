@@ -40,6 +40,7 @@ import { ValidationMethod } from '../src/enums/multiselect-questions/validation-
 import { randomNoun } from './seed-helpers/word-generator';
 import { householdMemberFactorySingle } from './seed-helpers/household-member-factory';
 import { featureFlagFactory } from './seed-helpers/feature-flag-factory';
+import { FeatureFlagEnum } from '../src/enums/feature-flags/feature-flags-enum';
 
 export const stagingSeed = async (
   prismaClient: PrismaClient,
@@ -87,6 +88,14 @@ export const stagingSeed = async (
       'hideCloseListingButton',
       false,
       'When true, close button is hidden on the listing edit form',
+      [jurisdiction.id],
+    ),
+  });
+  await prismaClient.featureFlags.create({
+    data: featureFlagFactory(
+      FeatureFlagEnum.enableMarketingStatus,
+      false,
+      "When true, the 'marketing status' sub-section is displayed in listing creation/edit and the public listing view",
       [jurisdiction.id],
     ),
   });
