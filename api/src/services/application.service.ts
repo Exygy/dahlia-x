@@ -933,8 +933,13 @@ export class ApplicationService {
     });
 
     const listing = await this.prisma.listings.findFirst({
-      where: { id: dto.id },
-      include: { jurisdictions: true },
+      where: { id: dto.listings.id },
+      include: {
+        jurisdictions: true,
+        listingMultiselectQuestions: {
+          include: { multiselectQuestions: true },
+        },
+      },
     });
     const application = mapTo(Application, res);
 

@@ -39,7 +39,9 @@ export const mockApplication = (options: {
   position?: number;
   numberOfHouseholdMembers?: number;
   includeLotteryPosition?: boolean;
+  includeFlagSets?: boolean;
   preferences?: any;
+  id?: string;
 }) => {
   let householdMember = undefined;
   if (options.numberOfHouseholdMembers) {
@@ -51,7 +53,7 @@ export const mockApplication = (options: {
     }
   }
   return {
-    id: randomUUID(),
+    id: options.id || randomUUID(),
     appUrl: `appUrl ${options.position}`,
     additionalPhone: true,
     additionalPhoneNumber: `additionalPhoneNumber ${options.position}`,
@@ -71,7 +73,7 @@ export const mockApplication = (options: {
     submissionType: ApplicationSubmissionTypeEnum.electronical,
     acceptedTerms: true,
     submissionDate: options.date,
-    markedAsDuplicate: false,
+    markedAsDuplicate: !!options.includeFlagSets,
     confirmationCode: `confirmationCode ${options.position}`,
     reviewStatus: ApplicationReviewStatusEnum.valid,
     applicant: {
@@ -116,12 +118,42 @@ export const mockApplication = (options: {
     createdAt: options.date,
     updatedAt: options.date,
     householdMember: householdMember,
+    applicationsMailingAddress: {
+      placeName: `application ${options.position} mailingAddress placeName`,
+      city: `application ${options.position} mailingAddress city`,
+      county: `application ${options.position} mailingAddress county`,
+      state: `application ${options.position} mailingAddress state`,
+      street: `application ${options.position} mailingAddress street`,
+      street2: `application ${options.position} mailingAddress street2`,
+      zipCode: `application ${options.position} mailingAddress zipCode`,
+    },
+    alternateContact: {
+      firstName: `application ${options.position} alternateContact firstName`,
+      lastName: `application ${options.position} alternateContact lastName`,
+      type: `application ${options.position} alternateContact type`,
+      agency: `application ${options.position} alternateContact agency`,
+      otherType: `application ${options.position} alternateContact otherType`,
+      emailAddress: `application ${options.position} alternatecontact emailaddress`,
+      phoneNumber: `application ${options.position} alternateContact phoneNumber`,
+      address: {
+        placeName: `application ${options.position} alternateContact address placeName`,
+        city: `application ${options.position} alternateContact address city`,
+        county: `application ${options.position} alternateContact address county`,
+        state: `application ${options.position} alternateContact address state`,
+        street: `application ${options.position} alternateContact address street`,
+        street2: `application ${options.position} alternateContact address street2`,
+        zipCode: `application ${options.position} alternateContact address zipCode`,
+      },
+    },
     applicationLotteryPositions: options.includeLotteryPosition
       ? [
           {
             ordinal: options.position + 1,
           },
         ]
+      : undefined,
+    applicationFlaggedSet: options.includeFlagSets
+      ? [{ applications: [] }]
       : undefined,
   };
 };
