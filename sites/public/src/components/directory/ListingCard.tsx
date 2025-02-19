@@ -74,27 +74,30 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
           />
         </div>
 
-        <Message
-          className={styles["due-date"]}
-          customIcon={
-            statusContent.length ? (
-              <Icon size="md" className={styles["primary-color-icon"]} aria-hidden={true}>
-                <InfoIcon />
-              </Icon>
-            ) : (
-              <></>
-            )
-          }
-        >
-          <div className={styles["due-date-content"]}>
-            <div>
-              {statusContent.map((content, index) => {
-                return <div key={index}>{content}</div>
-              })}
+        {!!statusContent.length && (
+          <Message
+            className={styles["due-date"]}
+            customIcon={
+              statusContent.length ? (
+                <Icon size="md" className={styles["primary-color-icon"]} aria-hidden={true}>
+                  <InfoIcon />
+                </Icon>
+              ) : (
+                <></>
+              )
+            }
+          >
+            <div className={styles["due-date-content"]}>
+              <div>
+                {statusContent.map((content, index) => {
+                  return <div key={index}>{content}</div>
+                })}
+              </div>
+              <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
             </div>
-            <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
-          </div>
-        </Message>
+          </Message>
+        )}
+
         <div className={styles["action-hide-lg"]}>{actions.map((action) => action)}</div>
       </div>
     </div>

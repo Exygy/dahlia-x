@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   @media (--sm-and-up) {
-    margin-inline: var(--seeds-s2);
+    margin-inline: var(--seeds-spacer-content);
   }
   @media (--sm-and-up) {
     padding-block: var(--seeds-spacer-container);
