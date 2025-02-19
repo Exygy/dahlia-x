@@ -72,10 +72,67 @@ describe('Testing listing csv export service', () => {
         'Listing Id,Listing Name,Unit Number,Unit Type,Number of Bathrooms,Unit Floor,Square Footage,Minimum Occupancy,Max Occupancy,AMI Chart,AMI Level,Rent Type',
       );
       expect(content).toContain(
-        'listing1-ID,listing1-Name,1,studio,2,3,1200,1,8,Ami Chart Name,80,Fixed amount',
+        '"listing1-ID","listing1-Name","1","studio","2","3","1200","1","8","Ami Chart Name","80","Fixed amount"',
       );
       expect(content).toContain(
-        'listing2-ID,listing2-Name,1,twoBdrm,2,3,1200,1,8,Ami Chart Name,80,% of income',
+        '"listing2-ID","listing2-Name","1","twoBdrm","2","3","1200","1","8","Ami Chart Name","80","% of income"',
+      );
+    });
+
+    it('should create the unit groups csv when feature flag is enabled', async () => {
+      const unitGroup = {
+        id: randomUUID(),
+        totalCount: 5,
+        totalAvailable: 2,
+        minOccupancy: 1,
+        maxOccupancy: 3,
+        floorMin: 1,
+        floorMax: 3,
+        sqFeetMin: '800',
+        sqFeetMax: '1000',
+        bathroomMin: '1',
+        bathroomMax: '2',
+        unitTypes: [
+          { id: randomUUID(), name: 'studio' },
+          { id: randomUUID(), name: 'oneBdrm' },
+        ],
+        unitGroupAmiLevels: [
+          {
+            id: randomUUID(),
+            amiPercentage: 30,
+            amiChart: { id: randomUUID(), name: 'Ami Chart Name' },
+          },
+          {
+            id: randomUUID(),
+            amiPercentage: 50,
+            amiChart: { id: randomUUID(), name: 'Ami Chart Name' },
+          },
+        ],
+      };
+
+      const mockListing = {
+        id: 'listing1-ID',
+        name: 'listing1-Name',
+        unitGroups: [unitGroup],
+      };
+
+      await service.createUnitCsv(
+        'sampleFile.csv',
+        [mockListing as unknown as Listing],
+        true, // enableUnitGroups flag
+      );
+
+      expect(writeStream.bytesWritten).toBeGreaterThan(0);
+      const content = fs.readFileSync('sampleFile.csv', 'utf8');
+
+      // Check headers
+      expect(content).toContain(
+        'Listing Id,Listing Name,Unit Group Id,Unit Types,AMI Chart,Rent Type,Affordable Unit Group Quantity,Unit Group Vacancies,Waitlist Status,Minimum Occupancy,Maximum Occupancy,Minimum Sq ft,Maximum Sq ft,Minimum Floor,Maximum Floor,Minimum Bathrooms,Maximum Bathrooms',
+      );
+
+      // Check content - note the empty value between commas for Rent Type
+      expect(content).toContain(
+        `"listing1-ID","listing1-Name","${unitGroup.id}","Studio, One Bedroom","Ami Chart Name",,"5","2","No","1","3","800","1000","1","3","1","2"`,
       );
     });
   });

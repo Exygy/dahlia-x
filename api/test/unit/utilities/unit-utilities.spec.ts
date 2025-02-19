@@ -6,6 +6,14 @@ import {
 } from '../../../src/utilities/unit-utilities';
 import { Unit } from '../../../src/dtos/units/unit.dto';
 import { AmiChartItem } from '../../../src/dtos/units/ami-chart-item.dto';
+import { MinMax } from '../../../src/dtos/shared/min-max.dto';
+import {
+  convertToTitleCase,
+  getRentTypes,
+  formatRange,
+  formatRentRange,
+} from '../../../src/utilities/unit-utilities';
+import { UnitGroupAmiLevel } from '../../../src/dtos/unit-groups/unit-group-ami-level.dto';
 
 const defaultValues = {
   createdAt: new Date(),
@@ -246,6 +254,87 @@ describe('Unit Transformations', () => {
           },
         ],
       });
+    });
+  });
+  describe('convertToTitleCase', () => {
+    it('should return empty string for empty input', () => {
+      expect(convertToTitleCase('')).toBe('');
+      expect(convertToTitleCase(null)).toBe('');
+    });
+
+    it('should convert camelCase to Title Case', () => {
+      expect(convertToTitleCase('camelCase')).toBe('Camel Case');
+      expect(convertToTitleCase('thisIsATest')).toBe('This Is A Test');
+    });
+  });
+
+  describe('getRentTypes', () => {
+    it('should return empty string for empty input', () => {
+      expect(getRentTypes([])).toBe('');
+      expect(getRentTypes(null)).toBe('');
+    });
+
+    it('should return unique rent types in title case', () => {
+      const amiLevels = [
+        { monthlyRentDeterminationType: 'fixedAmount' },
+        { monthlyRentDeterminationType: 'percentageOfIncome' },
+        { monthlyRentDeterminationType: 'fixedAmount' }, // duplicate
+      ] as UnitGroupAmiLevel[];
+      expect(getRentTypes(amiLevels)).toBe(
+        'Fixed Amount, Percentage Of Income',
+      );
+    });
+  });
+
+  describe('formatRange', () => {
+    it('should return empty string when both min and max are empty', () => {
+      expect(formatRange('', '', '$', '')).toBe('');
+      expect(formatRange(null, undefined, '$', '')).toBe('');
+    });
+
+    it('should return single value when min equals max', () => {
+      expect(formatRange(100, 100, '$', '')).toBe('$100');
+    });
+
+    it('should return single value when max is empty', () => {
+      expect(formatRange(100, '', '$', '')).toBe('$100');
+    });
+
+    it('should return max value when min is empty', () => {
+      expect(formatRange('', 200, '$', '')).toBe('$200');
+    });
+
+    it('should format range with prefix and postfix', () => {
+      expect(formatRange(100, 200, '$', '/mo')).toBe('$100/mo - $200/mo');
+      expect(formatRange(50, 75, '', '%')).toBe('50% - 75%');
+    });
+  });
+
+  describe('formatRentRange', () => {
+    it('should return empty string when both rent and percent are empty', () => {
+      expect(formatRentRange(null, null)).toBe('');
+    });
+
+    it('should format rent only', () => {
+      const rent: MinMax = { min: 1000, max: 2000 };
+      expect(formatRentRange(rent, null)).toBe('1000 - 2000');
+    });
+
+    it('should format percent only', () => {
+      const percent: MinMax = { min: 30, max: 40 };
+      expect(formatRentRange(null, percent)).toBe('30% - 40%');
+    });
+
+    it('should format both rent and percent', () => {
+      const rent: MinMax = { min: 1000, max: 2000 };
+      const percent: MinMax = { min: 30, max: 40 };
+      expect(formatRentRange(rent, percent)).toBe('1000 - 2000, 30% - 40%');
+    });
+
+    it('should handle single values', () => {
+      const rent: MinMax = { min: 1000, max: 1000 };
+      const percent: MinMax = { min: 30, max: 30 };
+      expect(formatRentRange(rent, percent)).toBe('1000, 30%');
     });
   });
 });

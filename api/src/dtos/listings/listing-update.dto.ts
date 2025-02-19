@@ -15,11 +15,13 @@ import { ListingEventCreate } from './listing-event-create.dto';
 import { ListingFeatures } from './listing-feature.dto';
 import { ListingUtilities } from './listing-utility.dto';
 import { LotteryDateParamValidator } from '../../utilities/lottery-date-validator';
+import { UnitGroupCreate } from '../unit-groups/unit-group-create.dto';
 
 export class ListingUpdate extends OmitType(Listing, [
   // fields get their type changed
   'listingMultiselectQuestions',
   'units',
+  'unitGroups',
   'applicationMethods',
   'assets',
   'unitsSummary',
@@ -60,6 +62,12 @@ export class ListingUpdate extends OmitType(Listing, [
   @Type(() => UnitCreate)
   @ApiPropertyOptional({ type: UnitCreate, isArray: true })
   units?: UnitCreate[];
+
+  @Expose()
+  @ValidateNested({ groups: [ValidationsGroupsEnum.default], each: true })
+  @Type(() => UnitGroupCreate)
+  @ApiPropertyOptional({ type: UnitGroupCreate, isArray: true })
+  unitGroups?: UnitGroupCreate[];
 
   @Expose()
   @ValidateNested({ groups: [ValidationsGroupsEnum.default], each: true })

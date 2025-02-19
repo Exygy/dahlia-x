@@ -10,6 +10,8 @@ import { UnitType } from '../dtos/unit-types/unit-type.dto';
 import { UnitAccessibilityPriorityType } from '../dtos/unit-accessibility-priority-types/unit-accessibility-priority-type.dto';
 import { AmiChartItem } from '../dtos/units/ami-chart-item.dto';
 import { UnitAmiChartOverride } from '../dtos/units/ami-chart-override.dto';
+import { isEmpty } from 'class-validator';
+import UnitGroupAmiLevel from 'src/dtos/unit-groups/unit-group-ami-level.dto';
 
 type AnyDict = { [key: string]: unknown };
 type UnitMap = {
@@ -542,3 +544,49 @@ export const summarizeUnits = (
   );
   return data;
 };
+
+export const convertToTitleCase = (value: string): string => {
+  if (isEmpty(value)) return '';
+  const spacedValue = value.replace(/([A-Z])/g, (match) => ` ${match}`);
+  const result = spacedValue.charAt(0).toUpperCase() + spacedValue.slice(1);
+  return result;
+};
+
+export const getRentTypes = (amiLevels: UnitGroupAmiLevel[]): string => {
+  if (isEmpty(amiLevels)) return '';
+  const uniqueTypes = [];
+  amiLevels?.forEach((elem) => {
+    if (!uniqueTypes.includes(elem.monthlyRentDeterminationType))
+      uniqueTypes.push(elem.monthlyRentDeterminationType);
+  });
+  const formattedResults = uniqueTypes
+    .map((elem) => convertToTitleCase(elem))
+    .join(', ');
+  return formattedResults;
+};
+
+export const formatRange = (
+  min: string | number,
+  max: string | number,
+  prefix: string,
+  postfix: string,
+): string => {
+  if (isEmpty(min) && isEmpty(max)) return '';
+  if (min == max || isEmpty(max)) return `${prefix}${min}${postfix}`;
+  if (isEmpty(min)) return `${prefix}${max}${postfix}`;
+  return `${prefix}${min}${postfix} - ${prefix}${max}${postfix}`;
+};
+
+export function formatRentRange(rent: MinMax, percent: MinMax): string {
+  let toReturn = '';
+  if (rent) {
+    toReturn += formatRange(rent.min, rent.max, '', '');
+  }
+  if (rent && percent) {
+    toReturn += ', ';
+  }
+  if (percent) {
+    toReturn += formatRange(percent.min, percent.max, '', '%');
+  }
+  return toReturn;
+}
