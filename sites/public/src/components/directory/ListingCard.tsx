@@ -19,6 +19,17 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
   const statusContent = []
   if (status.content) statusContent.push(status.content)
   if (status.subContent) statusContent.push(status.subContent)
+  // TODO: If favorites, add favorite button
+  const actions = [
+    <Button
+      href={`/listing/${listing.id}/${listing.urlSlug}`}
+      size={"sm"}
+      variant={"primary-outlined"}
+      className={styles["action-button"]}
+    >
+      {t("t.seeDetails")}
+    </Button>,
+  ]
 
   return (
     <div className={styles["listing-card"]}>
@@ -81,17 +92,10 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
                 return <div key={index}>{content}</div>
               })}
             </div>
-
-            <Button
-              href={`/listing/${listing.id}/${listing.urlSlug}`}
-              size={"sm"}
-              variant={"primary-outlined"}
-              className={styles["see-details"]}
-            >
-              {t("t.seeDetails")}
-            </Button>
+            <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
           </div>
         </Message>
+        <div className={styles["action-hide-lg"]}>{actions.map((action) => action)}</div>
       </div>
     </div>
   )
