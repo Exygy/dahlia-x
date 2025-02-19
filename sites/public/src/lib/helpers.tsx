@@ -55,7 +55,7 @@ const getListingCardSubtitle = (address: Address) => {
   return address ? `${street}, ${city} ${state}, ${zipCode}` : null
 }
 
-const getListingTableData = (
+export const getListingTableData = (
   unitsSummarized: UnitsSummarized,
   listingReviewOrder: ReviewOrderTypeEnum
 ) => {

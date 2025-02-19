@@ -1,0 +1,80 @@
+.listing-card {
+  display: flex;
+  flex-direction: row;
+  color: var(--seeds-text-color);
+  font-family: var(--seeds-font-alt-sans);
+  @media (--sm-only) {
+    flex-direction: column;
+  }
+  width: 100%;
+
+  padding-block-end: var(--seeds-spacer-content);
+  &:not(:last-child) {
+    border-bottom: var(--seeds-border-1) solid var(--seeds-border-color);
+  }
+  &:not(:first-child) {
+    padding-block-start: var(--seeds-spacer-content);
+  }
+
+  .image {
+    width: calc(100% / 5 * 2);
+    @media (--sm-only) {
+      width: 100%;
+    }
+  }
+  .image-background {
+    min-height: var(--seeds-s64);
+    max-height: 32rem;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+  .details {
+    width: calc(100% / 5 * 3);
+    padding-inline-start: var(--seeds-spacer-content);
+    @media (--sm-only) {
+      width: 100%;
+      padding-inline-start: 0;
+    }
+    .name {
+      font-size: var(--seeds-type-heading-size-3xl);
+      color: var(--seeds-color-primary);
+      font-weight: var(--seeds-font-weight-semibold);
+      margin-block-end: var(--seeds-s1);
+      @media (--sm-only) {
+        font-size: var(--seeds-type-heading-size-2xl);
+      }
+    }
+    .address {
+      color: var(--seeds-text-color-dark);
+    }
+    .tags {
+      margin-block-start: var(--seeds-s3);
+      span {
+        &:not(:last-child) {
+          margin-inline-end: var(--seeds-s2);
+        }
+      }
+    }
+    .unit-table {
+      margin-block-start: var(--seeds-spacer-content);
+    }
+    .due-date {
+      --message-border: var(--seeds-border-2) solid var(--seeds-color-primary-light);
+      --message-max-width: 100%;
+      --message-border-radius: var(--seeds-rounded);
+      --message-padding: var(--seeds-s2) var(--seeds-s2) var(--seeds-s2) var(--seeds-s3);
+      margin-block-start: var(--seeds-s3);
+      background-color: var(--seeds-bg-color-surface-primary);
+      .primary-color-icon {
+        color: var(--seeds-color-primary-dark);
+      }
+      .due-date-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+}
