@@ -34,7 +34,7 @@
       }
     }
     .image-background {
-      @media (--sm-only) {
+      @media (--md-down) {
         min-height: var(--seeds-s72);
       }
       height: 100%;
