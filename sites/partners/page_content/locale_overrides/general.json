@@ -345,6 +345,8 @@
   "listings.sections.buildingDetailsTitle": "Building Details",
   "listings.sections.buildingFeaturesSubtitle": "Provide details about any amenities and unit details.",
   "listings.sections.buildingFeaturesTitle": "Building Features",
+  "listings.sections.neighborhoodPlaceholder": "Select Neighborhood",
+  "listings.sections.regionPlaceholder": "Select Region",
   "listings.sections.communityType": "Community Type",
   "listings.sections.communityTypeSubtitle": "Are there any requirements that applicants need to meet?",
   "listings.sections.costsNotIncluded": "Costs Not Included",

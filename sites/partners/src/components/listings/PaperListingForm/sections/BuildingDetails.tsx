@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import {
   t,
@@ -7,15 +7,22 @@ import {
   FieldGroup,
   ListingMap,
   LatitudeLongitude,
+  GridCell,
 } from "@bloom-housing/ui-components"
 import { FieldValue, Grid } from "@bloom-housing/ui-seeds"
-import { stateKeys } from "@bloom-housing/shared-helpers"
+import { AuthContext, stateKeys } from "@bloom-housing/shared-helpers"
 import { FormListing } from "../../../../lib/listings/formTypes"
 import GeocodeService, {
   GeocodeService as GeocodeServiceType,
 } from "@mapbox/mapbox-sdk/services/geocoding"
 import { fieldHasError, fieldMessage } from "../../../../lib/helpers"
 import SectionWithGrid from "../../../shared/SectionWithGrid"
+import {
+  FeatureFlagEnum,
+  RegionEnum,
+} from "@bloom-housing/shared-helpers/src/types/backend-swagger"
+import { neighborhoodRegions } from "../../../../lib/listings/Neighborhoods"
+import { GridRow } from "@bloom-housing/ui-seeds/src/layout/Grid"
 
 interface MapBoxFeature {
   center: number[] // Index 0: longitude, Index 1: latitude
@@ -45,9 +52,10 @@ const BuildingDetails = ({
   setCustomMapPositionChosen,
 }: BuildingDetailsProps) => {
   const formMethods = useFormContext()
+  const { doJurisdictionsHaveFeatureFlagOn } = useContext(AuthContext)
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { register, control, getValues, errors, clearErrors } = formMethods
+  const { register, watch, control, getValues, setValue, errors, clearErrors } = formMethods
 
   const [geocodingClient, setGeocodingClient] = useState<GeocodeServiceType>()
 
@@ -144,6 +152,20 @@ const BuildingDetails = ({
       : defaultMessage
   }
 
+  const enableRegions = doJurisdictionsHaveFeatureFlagOn(
+    FeatureFlagEnum.enableRegions,
+    listing?.jurisdictions?.id
+  )
+
+  const { neighborhood, region } = watch(["neighborhood", "region"])
+
+  useEffect(() => {
+    const matchingConfig = neighborhoodRegions.find((entry) => entry.name == neighborhood)
+    if (matchingConfig && matchingConfig.region !== region) {
+      setValue("region", matchingConfig.region)
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [neighborhood, setValue])
   return (
     <>
       <hr className="spacer-section-above spacer-section" />
@@ -179,13 +201,33 @@ const BuildingDetails = ({
               register={register}
             />
           </Grid.Cell>
-          <Field
-            label={t("t.neighborhood")}
-            name={"neighborhood"}
-            id={"neighborhood"}
-            placeholder={t("t.neighborhood")}
-            register={register}
-          />
+          <GridCell>
+            {enableRegions ? (
+              <FieldValue label={t("t.neighborhood")}>
+                <Select
+                  name={"neighborhood"}
+                  id={"neighborhood"}
+                  placeholder={t("listings.sections.neighborhoodPlaceholder")}
+                  inputProps={{
+                    className: "w-full",
+                  }}
+                  register={register}
+                  options={neighborhoodRegions.map((entry) => ({
+                    value: entry.name,
+                    label: entry.name,
+                  }))}
+                />
+              </FieldValue>
+            ) : (
+              <Field
+                label={t("t.neighborhood")}
+                name={"neighborhood"}
+                id={"neighborhood"}
+                placeholder={t("t.neighborhood")}
+                register={register}
+              />
+            )}
+          </GridCell>
         </Grid.Row>
         <Grid.Row columns={6}>
           <Grid.Cell className="seeds-grid-span-2">
@@ -211,7 +253,6 @@ const BuildingDetails = ({
               }}
               register={register}
             />
-            <p className="field-sub-note">{t("listings.requiredToPublish")}</p>
           </Grid.Cell>
           <Grid.Cell>
             <FieldValue
@@ -277,16 +318,52 @@ const BuildingDetails = ({
             />
           </Grid.Cell>
           <Grid.Cell className="seeds-grid-span-2">
-            <Field
-              label={t("listings.yearBuilt")}
-              name={"yearBuilt"}
-              id={"yearBuilt"}
-              placeholder={t("listings.yearBuilt")}
-              type={"number"}
-              register={register}
-            />
+            {enableRegions ? (
+              <FieldValue label={t("t.region")}>
+                <Select
+                  id="region"
+                  name="region"
+                  placeholder={t("listings.sections.regionPlaceholder")}
+                  register={register}
+                  inputProps={{
+                    className: "w-full",
+                    onChange: () => setValue("neighborhood", undefined),
+                  }}
+                  options={Object.keys(RegionEnum).map((entry) => ({
+                    value: entry,
+                    label: entry.toString().replace("_", " "),
+                  }))}
+                />
+              </FieldValue>
+            ) : (
+              <Field
+                label={t("listings.yearBuilt")}
+                name={"yearBuilt"}
+                id={"yearBuilt"}
+                placeholder={t("listings.yearBuilt")}
+                type={"number"}
+                register={register}
+              />
+            )}
           </Grid.Cell>
         </Grid.Row>
+        <GridRow columns={3}>
+          <GridCell>
+            <p className="field-sub-note">{t("listings.requiredToPublish")}</p>
+          </GridCell>
+          <GridCell className="col-start-3">
+            {enableRegions && (
+              <Field
+                label={t("listings.yearBuilt")}
+                name={"yearBuilt"}
+                id={"yearBuilt"}
+                placeholder={t("listings.yearBuilt")}
+                type={"number"}
+                register={register}
+              />
+            )}
+          </GridCell>
+        </GridRow>
         <Grid.Row columns={3}>
           <Grid.Cell className="seeds-grid-span-2">
             <FieldValue label={t("listings.mapPreview")}>

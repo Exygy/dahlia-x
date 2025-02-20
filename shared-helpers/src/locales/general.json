@@ -903,6 +903,7 @@
   "t.n/a": "n/a",
   "t.name": "Name",
   "t.neighborhood": "Neighborhood",
+  "t.region": "Region",
   "t.next": "Next",
   "t.no": "No",
   "t.noMoreThan": "no more than %{amount}",
