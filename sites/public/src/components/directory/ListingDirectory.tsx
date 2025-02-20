@@ -8,6 +8,7 @@ import { MetaTags } from "../../components/shared/MetaTags"
 import { Listing } from "@bloom-housing/shared-helpers/src/types/backend-swagger"
 import { ListingCard } from "./ListingCard"
 import styles from "./ListingDirectory.module.scss"
+import { Heading } from "@bloom-housing/ui-seeds"
 
 export interface ListingDirectoryProps {
   openListings: Listing[]
@@ -41,11 +42,21 @@ export const ListingDirectory = (props: ListingDirectoryProps) => {
 
       <div className={styles["listing-directory"]}>
         <div className={styles["content-wrapper"]}>
-          <ul>
-            {props.openListings.map((listing, index) => {
-              return <ListingCard listing={listing} key={index} />
-            })}
-          </ul>
+          <>
+            {props.openListings.length > 0 ? (
+              <ul>
+                {props.openListings.map((listing, index) => {
+                  return <ListingCard listing={listing} key={index} />
+                })}
+              </ul>
+            ) : (
+              <div className={styles["empty-state"]}>
+                <Heading size={"xl"} priority={2} className={styles["empty-heading"]}>
+                  {t("listings.noOpenListings")}
+                </Heading>
+              </div>
+            )}
+          </>
         </div>
       </div>
     </Layout>

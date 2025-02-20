@@ -95,7 +95,7 @@ export const getListingApplicationStatus = (listing: Listing): StatusBarType => 
     }
   }
 
-  if (formattedDate != "") {
+  if (formattedDate !== "") {
     content = content + `: ${formattedDate}`
   }
 

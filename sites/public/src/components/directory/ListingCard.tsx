@@ -17,8 +17,8 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
   const listingTags = getListingTags(listing)
   const status = getListingApplicationStatus(listing)
   const statusContent = []
-  if (status.content) statusContent.push(status.content)
-  if (status.subContent) statusContent.push(status.subContent)
+  if (status?.content) statusContent.push(status.content)
+  if (status?.subContent) statusContent.push(status.subContent)
   // TODO: If favorites, add favorite button
   const actions = [
     <Button
@@ -27,6 +27,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
       variant={"primary-outlined"}
       className={`${styles["action-button"]} ${styles["link-button"]}`}
       ariaLabel={`See details for ${listing.name}`}
+      key={t("t.seeDetails")}
     >
       {t("t.seeDetails")}
     </Button>,
@@ -68,13 +69,9 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
             <Message
               className={styles["due-date"]}
               customIcon={
-                statusContent.length ? (
-                  <Icon size="md" className={styles["primary-color-icon"]}>
-                    <InfoIcon />
-                  </Icon>
-                ) : (
-                  <></>
-                )
+                <Icon size="md" className={styles["primary-color-icon"]}>
+                  <InfoIcon />
+                </Icon>
               }
             >
               <div className={styles["due-date-content"]}>

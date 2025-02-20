@@ -21,3 +21,15 @@
     padding-block: var(--seeds-spacer-container);
   }
 }
+.empty-state {
+  @media (--sm-only) {
+    padding: var(--seeds-spacer-content);
+  }
+}
+
+.empty-heading {
+  font-size: var(--seeds-font-size-2xl);
+  @media (--md-down) {
+    font-size: var(--seeds-font-size-xl);
+  }
+}
