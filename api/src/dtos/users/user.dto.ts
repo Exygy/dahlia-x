@@ -142,4 +142,11 @@ export class User extends AbstractDTO {
   @IsString({ groups: [ValidationsGroupsEnum.default] })
   @ApiPropertyOptional()
   activeRefreshToken?: string;
+
+  @Expose()
+  @IsArray({ groups: [ValidationsGroupsEnum.default] })
+  @ValidateNested({ groups: [ValidationsGroupsEnum.default], each: true })
+  @Type(() => IdDTO)
+  @ApiPropertyOptional({ type: IdDTO, isArray: true })
+  favoriteListings?: IdDTO[];
 }

@@ -36,6 +36,7 @@ import { UserUpdate } from '../dtos/users/user-update.dto';
 import { SuccessDTO } from '../dtos/shared/success.dto';
 import { UserCreate } from '../dtos/users/user-create.dto';
 import { UserCreateParams } from '../dtos/users/user-create-params.dto';
+import { UserFavoriteListing } from '../dtos/users/user-favorite-listing.dto';
 import { EmailAndAppUrl } from '../dtos/users/email-and-app-url.dto';
 import { ConfirmationRequest } from '../dtos/users/confirmation-request.dto';
 import { UserInvite } from '../dtos/users/user-invite.dto';
@@ -110,41 +111,11 @@ export class UserController {
     return await this.userCSVExportService.exportFile(req, res);
   }
 
-  @Get(`:id`)
-  @ApiOperation({
-    summary: 'Get user by id',
-    operationId: 'retrieve',
-  })
-  @ApiOkResponse({ type: User })
-  @UseGuards(JwtAuthGuard, PermissionGuard)
-  async retrieve(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
-  ): Promise<User> {
-    return this.userService.findOne(userId);
-  }
-
   @Put('forgot-password')
   @ApiOperation({ summary: 'Forgot Password', operationId: 'forgotPassword' })
   @ApiOkResponse({ type: SuccessDTO })
   async forgotPassword(@Body() dto: EmailAndAppUrl): Promise<SuccessDTO> {
     return await this.userService.forgotPassword(dto);
-  }
-
-  @Put(':id')
-  @ApiOperation({ summary: 'Update user', operationId: 'update' })
-  @ApiOkResponse({ type: User })
-  @UseGuards(JwtAuthGuard, PermissionGuard)
-  @UseInterceptors(ActivityLogInterceptor)
-  async update(
-    @Request() req: ExpressRequest,
-    @Body() dto: UserUpdate,
-  ): Promise<User> {
-    const jurisdictionName = req.headers['jurisdictionname'] || '';
-    return await this.userService.update(
-      dto,
-      mapTo(User, req['user']),
-      jurisdictionName as string,
-    );
   }
 
   @Delete()
@@ -239,5 +210,52 @@ export class UserController {
     @Body() dto: ConfirmationRequest,
   ): Promise<SuccessDTO> {
     return await this.userService.isUserConfirmationTokenValid(dto);
+  }
+
+  @Put(`modifyFavoriteListings`)
+  @ApiOperation({
+    summary: 'Add or remove a listing from user favorites',
+    operationId: 'modifyFavoriteListings',
+  })
+  @ApiOkResponse({ type: UserFavoriteListing })
+  @UseGuards(JwtAuthGuard, UserProfilePermissionGuard)
+  async modifyFavoriteListings(
+    @Request() req: ExpressRequest,
+    @Body() dto: UserFavoriteListing,
+  ): Promise<User> {
+    return await this.userService.modifyFavoriteListings(
+      dto,
+      mapTo(User, req['user']),
+    );
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update user', operationId: 'update' })
+  @ApiOkResponse({ type: User })
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @UseInterceptors(ActivityLogInterceptor)
+  async update(
+    @Request() req: ExpressRequest,
+    @Body() dto: UserUpdate,
+  ): Promise<User> {
+    const jurisdictionName = req.headers['jurisdictionname'] || '';
+    return await this.userService.update(
+      dto,
+      mapTo(User, req['user']),
+      jurisdictionName as string,
+    );
+  }
+
+  @Get(`:id`)
+  @ApiOperation({
+    summary: 'Get user by id',
+    operationId: 'retrieve',
+  })
+  @ApiOkResponse({ type: User })
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  async retrieve(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
+  ): Promise<User> {
+    return this.userService.findOne(userId);
   }
 }

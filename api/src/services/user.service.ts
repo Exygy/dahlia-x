@@ -43,6 +43,8 @@ import { getPublicEmailURL } from '../utilities/get-public-email-url';
 import { UserRole } from '../dtos/users/user-role.dto';
 import { RequestSingleUseCode } from '../dtos/single-use-code/request-single-use-code.dto';
 import { getSingleUseCode } from '../utilities/get-single-use-code';
+import { UserFavoriteListing } from '../dtos/users/user-favorite-listing.dto';
+import { ModificationEnum } from '../enums/shared/modification-enum';
 
 /*
   this is the service for users
@@ -59,6 +61,12 @@ const views: Partial<Record<UserViews, Prisma.UserAccountsInclude>> = {
 views.full = {
   ...views.base,
   listings: true,
+  favoriteListings: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
 };
 
 type findByOptions = {
@@ -975,5 +983,45 @@ export class UserService {
     await this.emailService.sendSingleUseCode(mapTo(User, user), singleUseCode);
 
     return { success: true };
+  }
+
+  async modifyFavoriteListings(dto: UserFavoriteListing, requestingUser: User) {
+    const listing = await this.prisma.listings.findUnique({
+      where: {
+        id: dto.id,
+      },
+    });
+
+    if (!listing) {
+      throw new NotFoundException(
+        `listingId ${dto.id} was requested but not found`,
+      );
+    }
+
+    let dateClause;
+    switch (dto.action) {
+      case ModificationEnum.add:
+        dateClause = {
+          connect: { id: dto.id },
+        };
+        break;
+      case ModificationEnum.remove:
+        dateClause = {
+          disconnect: { id: dto.id },
+        };
+        break;
+    }
+
+    const rawResults = await this.prisma.userAccounts.update({
+      data: {
+        favoriteListings: dateClause,
+      },
+      include: views.full,
+      where: {
+        id: requestingUser.id,
+      },
+    });
+
+    return mapTo(User, rawResults);
   }
 }

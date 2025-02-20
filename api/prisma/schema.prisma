@@ -612,6 +612,7 @@ model Listings {
   listingsApplicationPickUpAddress      Address?                      @relation("application_pick_up_address", fields: [applicationPickUpAddressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   listingsBuildingAddress               Address?                      @relation("building_address", fields: [buildingAddressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userAccounts                          UserAccounts[]
+  userAccountFavorites                  UserAccounts[]                @relation("favorite_listings")
   units                                 Units[]
   unitGroup                             UnitGroup[]
   userPreferences                       UserPreferences[]
@@ -857,6 +858,7 @@ model UserAccounts {
   userPreferences          UserPreferences?
   userRoles                UserRoles?
   requestedChangesListings Listings[]              @relation("requested_changes_user")
+  favoriteListings         Listings[]              @relation("favorite_listings")
 
   @@map("user_accounts")
 }
