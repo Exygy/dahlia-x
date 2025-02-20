@@ -3,6 +3,10 @@
   width: 100%;
   justify-content: center;
   font-family: var(--seeds-font-alt-sans);
+
+  ul {
+    list-style-type: none;
+  }
 }
 
 .content-wrapper {

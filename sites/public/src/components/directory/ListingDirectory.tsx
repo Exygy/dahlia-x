@@ -8,7 +8,6 @@ import { MetaTags } from "../../components/shared/MetaTags"
 import { Listing } from "@bloom-housing/shared-helpers/src/types/backend-swagger"
 import { ListingCard } from "./ListingCard"
 import styles from "./ListingDirectory.module.scss"
-import MaxWidthLayout from "../../layouts/max-width"
 
 export interface ListingDirectoryProps {
   openListings: Listing[]
@@ -42,9 +41,11 @@ export const ListingDirectory = (props: ListingDirectoryProps) => {
 
       <div className={styles["listing-directory"]}>
         <div className={styles["content-wrapper"]}>
-          {props.openListings.map((listing, index) => {
-            return <ListingCard listing={listing} key={index} />
-          })}
+          <ul>
+            {props.openListings.map((listing, index) => {
+              return <ListingCard listing={listing} key={index} />
+            })}
+          </ul>
         </div>
       </div>
     </Layout>

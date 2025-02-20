@@ -25,85 +25,84 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
       href={`/listing/${listing.id}/${listing.urlSlug}`}
       size={"sm"}
       variant={"primary-outlined"}
-      className={styles["action-button"]}
+      className={`${styles["action-button"]} ${styles["link-button"]}`}
+      ariaLabel={`See details for ${listing.name}`}
     >
       {t("t.seeDetails")}
     </Button>,
   ]
 
   return (
-    <div className={styles["listing-card"]}>
-      <div className={styles["image"]}>
-        {/* <img
-          src={imageUrl}
-          alt={t("listings.buildingImageAltText")}
-          //   ref={(el) => (imgRefs.current[0] = el)}
-          //   onError={onError}
-        /> */}
-        <div
-          className={styles["image-background"]}
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        />
-      </div>
-      <div className={styles["details"]}>
-        <Heading priority={1} size={"xl"} className={styles["name"]}>
-          {listing.name}
-        </Heading>
-        <div className={styles["address"]}>{oneLineAddress(listing.listingsBuildingAddress)}</div>
-        {listingTags.length > 0 && (
-          <div className={`${styles["tags"]}`}>
-            {listingTags.map((tag, index) => {
-              return (
-                <Tag variant={tag.variant} key={index} className={styles["tag"]}>
-                  {tag.title}
-                </Tag>
-              )
-            })}
+    <li className={styles["listing-card-container"]}>
+      <div className={styles["listing-card"]}>
+        <div className={styles["details"]}>
+          <Heading priority={2} size={"xl"} className={styles["name"]}>
+            {listing.name}
+          </Heading>
+          <div className={styles["address"]}>{oneLineAddress(listing.listingsBuildingAddress)}</div>
+          {listingTags.length > 0 && (
+            <div className={`${styles["tags"]}`}>
+              {listingTags.map((tag, index) => {
+                return (
+                  <Tag variant={tag.variant} key={index} className={styles["tag"]}>
+                    {tag.title}
+                  </Tag>
+                )
+              })}
+            </div>
+          )}
+          <div className={styles["unit-table"]}>
+            <StandardTable
+              headers={{
+                unitType: "t.unitType",
+                minimumIncome: "t.minimumIncome",
+                rent: "t.rent",
+              }}
+              data={getListingTableData(listing.unitsSummarized, listing.reviewOrderType)}
+              responsiveCollapse={true}
+              cellClassName={"px-5 py-3"}
+            />
           </div>
-        )}
-        <div className={styles["unit-table"]}>
-          <StandardTable
-            headers={{
-              unitType: "t.unitType",
-              minimumIncome: "t.minimumIncome",
-              rent: "t.rent",
-            }}
-            data={getListingTableData(listing.unitsSummarized, listing.reviewOrderType)}
-            responsiveCollapse={true}
-            cellClassName={"px-5 py-3"}
+
+          {statusContent.length > 0 ? (
+            <Message
+              className={styles["due-date"]}
+              customIcon={
+                statusContent.length ? (
+                  <Icon size="md" className={styles["primary-color-icon"]}>
+                    <InfoIcon />
+                  </Icon>
+                ) : (
+                  <></>
+                )
+              }
+            >
+              <div className={styles["due-date-content"]}>
+                <div>
+                  {statusContent.map((content, index) => {
+                    return <div key={index}>{content}</div>
+                  })}
+                </div>
+                <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
+              </div>
+            </Message>
+          ) : (
+            <div className={`${styles["action-show-lg"]} ${styles["actions-container"]}`}>
+              {actions.map((action) => action)}
+            </div>
+          )}
+
+          <div className={styles["action-hide-lg"]}>{actions.map((action) => action)}</div>
+        </div>
+        <div className={styles["image"]}>
+          <div
+            className={styles["image-background"]}
+            style={{ backgroundImage: `url(${imageUrl})` }}
+            role="img"
+            aria-label={t("listings.buildingImageAltText")}
           />
         </div>
-
-        {statusContent.length > 0 ? (
-          <Message
-            className={styles["due-date"]}
-            customIcon={
-              statusContent.length ? (
-                <Icon size="md" className={styles["primary-color-icon"]} aria-hidden={true}>
-                  <InfoIcon />
-                </Icon>
-              ) : (
-                <></>
-              )
-            }
-          >
-            <div className={styles["due-date-content"]}>
-              <div>
-                {statusContent.map((content, index) => {
-                  return <div key={index}>{content}</div>
-                })}
-              </div>
-              <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
-            </div>
-          </Message>
-        ) : (
-          <div className={`${styles["action-show-lg"]} ${styles["actions-container"]}`}>
-            {actions.map((action) => action)}
-          </div>
-        )}
-
-        <div className={styles["action-hide-lg"]}>{actions.map((action) => action)}</div>
       </div>
-    </div>
+    </li>
   )
 }
