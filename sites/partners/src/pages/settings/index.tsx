@@ -24,6 +24,7 @@ import {
   MultiselectQuestionUpdate,
   MultiselectQuestionsApplicationSectionEnum,
 } from "@bloom-housing/shared-helpers/src/types/backend-swagger"
+import { PreferenceEditModal } from "../../components/settings/PreferenceEditModal"
 
 export type DrawerType = "add" | "edit"
 
@@ -43,6 +44,7 @@ const Settings = () => {
   const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState<MultiselectQuestion | null>(
     null
   )
+  const [editConfirmModalOpen, setEditConfirmModalOpen] = useState<MultiselectQuestion | null>(null)
 
   const { data, loading, cacheKey } = useJurisdictionalMultiselectQuestionList(
     profile?.jurisdictions?.map((jurisdiction) => jurisdiction.id).toString(),
@@ -77,10 +79,7 @@ const Settings = () => {
               <ManageIconSection
                 onCopy={() => setCopyModalOpen(preference)}
                 copyTestId={`preference-copy-icon: ${preference.text}`}
-                onEdit={() => {
-                  setQuestionData(preference)
-                  setPreferenceDrawerOpen("edit")
-                }}
+                onEdit={() => setEditConfirmModalOpen(preference)}
                 editTestId={`preference-edit-icon: ${preference.text}`}
                 onDelete={() => setDeleteConfirmModalOpen(preference)}
                 deleteTestId={`preference-delete-icon: ${preference.text}`}
@@ -259,6 +258,18 @@ const Settings = () => {
           onClose={() => {
             setDeleteConfirmModalOpen(null)
             void mutate(cacheKey)
+          }}
+        />
+      )}
+      {editConfirmModalOpen && (
+        <PreferenceEditModal
+          multiselectQuestion={editConfirmModalOpen}
+          onClose={() => {
+            setEditConfirmModalOpen(null)
+          }}
+          onEdit={() => {
+            setQuestionData(editConfirmModalOpen)
+            setPreferenceDrawerOpen("edit")
           }}
         />
       )}
