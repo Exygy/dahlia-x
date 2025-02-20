@@ -2,7 +2,7 @@
   padding-block-end: var(--seeds-spacer-content);
   &:not(:last-child) {
     @media (--md-and-up) {
-      border-bottom: var(--seeds-border-1) solid var(--seeds-border-color);
+      border-block-end: var(--seeds-border-1) solid var(--seeds-border-color);
     }
   }
   &:not(:first-child) {
@@ -34,11 +34,6 @@
       }
     }
     .image-background {
-      min-height: var(--seeds-s64);
-      @media (--md-down) {
-        min-height: var(--seeds-s96);
-        max-height: 32rem;
-      }
       @media (--sm-only) {
         min-height: var(--seeds-s72);
       }
@@ -69,9 +64,9 @@
       }
       .tags {
         margin-block-start: var(--seeds-s3);
-        margin-bottom: calc(-1 * var(--seeds-s1));
+        margin-block-end: calc(-1 * var(--seeds-s1));
         .tag {
-          margin-bottom: var(--seeds-s1);
+          margin-block-end: var(--seeds-s1);
           &:not(:last-child) {
             margin-inline-end: var(--seeds-s2);
           }

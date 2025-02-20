@@ -19,7 +19,6 @@ export const ListingDirectory = (props: ListingDirectoryProps) => {
   const { profile } = useContext(AuthContext)
   const pageTitle = `${t("pageTitle.rent")} - ${t("nav.siteTitle")}`
   const metaDescription = t("pageDescription.welcome", { regionName: t("region.name") })
-  const metaImage = "" // TODO: replace with hero image
 
   useEffect(() => {
     pushGtmEvent<ListingList>({
@@ -37,7 +36,7 @@ export const ListingDirectory = (props: ListingDirectoryProps) => {
         <title>{pageTitle}</title>
       </Head>
 
-      <MetaTags title={t("nav.siteTitle")} image={metaImage} description={metaDescription} />
+      <MetaTags title={t("nav.siteTitle")} description={metaDescription} />
       <PageHeader title={t("pageTitle.rent")} />
 
       <div className={styles["listing-directory"]}>
