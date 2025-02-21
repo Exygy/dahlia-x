@@ -816,6 +816,12 @@ export class ScriptRunnerService {
       active: false,
     },
     {
+      name: 'enableNeighborhoodAmenities',
+      description:
+        "When true, the 'neighborhood amenities' section is displayed in listing creation/edit and the public listing view",
+      active: false,
+    },
+    {
       name: 'exportApplicationAsSpreadsheet',
       description:
         'When true, the application export is done as an Excel spreadsheet',

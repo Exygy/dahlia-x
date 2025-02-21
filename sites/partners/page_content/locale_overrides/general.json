@@ -358,6 +358,8 @@
   "listings.sections.lotteryResultsAdd": "Add Results",
   "listings.sections.lotteryResultsEdit": "Edit Results",
   "listings.sections.lotteryResultsHelperText": "Upload Results",
+  "listings.sections.neighborhoodAmenitiesTitle": "Neighborhood Amenities",
+  "listings.sections.neighborhoodAmenitiesSubtitle": "Provide details about any local amenities including grocery stores, health services and parks within 2 miles of your listing.",
   "listings.sections.openHouse": "Open House",
   "listings.sections.photo.helperText": "Select JPEG or PNG file to upload. Please upload horizontal images only at approximately 1440px. Up to 10 uploaded images allowed.",
   "listings.sections.photo.primaryPhoto": "Primary photo",

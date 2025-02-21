@@ -19,6 +19,7 @@ import DetailListingData from "../../../components/listings/PaperListingDetails/
 import DetailListingIntro from "../../../components/listings/PaperListingDetails/sections/DetailListingIntro"
 import DetailListingPhotos from "../../../components/listings/PaperListingDetails/sections/DetailListingPhotos"
 import DetailBuildingDetails from "../../../components/listings/PaperListingDetails/sections/DetailBuildingDetails"
+import DetailNeighborhoodAmenities from "../../../components/listings/PaperListingDetails/sections/DetailNeighborhoodAmenities"
 import DetailAdditionalDetails from "../../../components/listings/PaperListingDetails/sections/DetailAdditionalDetails"
 import DetailAdditionalEligibility from "../../../components/listings/PaperListingDetails/sections/DetailAdditionalEligibility"
 import DetailLeasingAgent from "../../../components/listings/PaperListingDetails/sections/DetailLeasingAgent"
@@ -110,6 +111,7 @@ export default function ListingDetail(props: ListingProps) {
                     <DetailPrograms />
                     <DetailAdditionalFees />
                     <DetailBuildingFeatures />
+                    <DetailNeighborhoodAmenities />
                     <DetailAdditionalEligibility />
                     <DetailAdditionalDetails />
                     <DetailRankingsAndResults />

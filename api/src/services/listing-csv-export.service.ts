@@ -646,6 +646,71 @@ export class ListingCsvExporterService implements CsvExporterServiceInterface {
           path: 'servicesOffered',
           label: 'Services Offered',
         },
+      ],
+    );
+
+    if (
+      this.doAnyJurisdictionHaveFeatureFlagSet(
+        user.jurisdictions,
+        FeatureFlagEnum.enableNeighborhoodAmenities,
+      )
+    ) {
+      headers.push(
+        ...[
+          {
+            path: 'listingNeighborhoodAmenities.groceryStores',
+            label: 'Neighborhood Amenities - Grocery Stores',
+          },
+          {
+            path: 'listingNeighborhoodAmenities.publicTransportation',
+            label: 'Neighborhood Amenities - Public Transportation',
+          },
+          {
+            path: 'listingNeighborhoodAmenities.schools',
+            label: 'Neighborhood Amenities - Schools',
+          },
+          {
+            path: 'listingNeighborhoodAmenities.parksAndCommunityCenters',
+            label: 'Neighborhood Amenities - Parks and Community Centers',
+          },
+          {
+            path: 'listingNeighborhoodAmenities.pharmacies',
+            label: 'Neighborhood Amenities - Pharmacies',
+          },
+          {
+            path: 'listingNeighborhoodAmenities.healthCareResources',
+            label: 'Neighborhood Amenities - Health Care Resources',
+          },
+        ],
+      );
+    }
+
+    headers.push(
+      ...[
+        {
+          path: 'listingNeighborhoodAmenities.groceryStores',
+          label: 'Neighborhood Amenities - Grocery Stores',
+        },
+        {
+          path: 'listingNeighborhoodAmenities.publicTransportation',
+          label: 'Neighborhood Amenities - Public Transportation',
+        },
+        {
+          path: 'listingNeighborhoodAmenities.schools',
+          label: 'Neighborhood Amenities - Schools',
+        },
+        {
+          path: 'listingNeighborhoodAmenities.parksAndCommunityCenters',
+          label: 'Neighborhood Amenities - Parks and Community Centers',
+        },
+        {
+          path: 'listingNeighborhoodAmenities.pharmacies',
+          label: 'Neighborhood Amenities - Pharmacies',
+        },
+        {
+          path: 'listingNeighborhoodAmenities.healthCareResources',
+          label: 'Neighborhood Amenities - Health Care Resources',
+        },
         {
           path: 'creditHistory',
           label: 'Eligibility Rules - Credit History',

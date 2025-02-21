@@ -120,6 +120,7 @@ export const formDefaults: FormListing = {
   listingEvents: [],
   listingImages: [],
   listingFeatures: null,
+  listingNeighborhoodAmenities: null,
   listingUtilities: null,
   listingsLeasingAgentAddress: null,
   leasingAgentEmail: null,

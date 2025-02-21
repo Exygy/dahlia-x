@@ -52,6 +52,7 @@ import PublishListingDialog from "./dialogs/PublishListingDialog"
 import LiveConfirmationDialog from "./dialogs/LiveConfirmationDialog"
 import ListingApprovalDialog from "./dialogs/ListingApprovalDialog"
 import SaveBeforeExitDialog from "./dialogs/SaveBeforeExitDialog"
+import NeighborhoodAmenities from "./sections/NeighborhoodAmenities"
 
 type ListingFormProps = {
   listing?: FormListing
@@ -390,6 +391,7 @@ const ListingForm = ({ listing, editMode, setListingName }: ListingFormProps) =>
                           />
                           <AdditionalFees existingUtilities={listing?.listingUtilities} />
                           <BuildingFeatures existingFeatures={listing?.listingFeatures} />
+                          <NeighborhoodAmenities></NeighborhoodAmenities>
                           <AdditionalEligibility defaultText={listing?.rentalAssistance} />
                           <BuildingSelectionCriteria />
                           <AdditionalDetails />
