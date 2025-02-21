@@ -34,6 +34,7 @@ import DetailListingPhotos from "../../../../src/components/listings/PaperListin
 import DetailListingNotes from "../../../../src/components/listings/PaperListingDetails/sections/DetailNotes"
 import ListingDetail, { getServerSideProps } from "../../../../src/pages/listings/[id]"
 import DetailPrograms from "../../../../src/components/listings/PaperListingDetails/sections/DetailPrograms"
+import DetailListingVerification from "../../../../src/components/listings/PaperListingDetails/sections/DetailListingVerification"
 
 const server = setupServer()
 
@@ -1419,6 +1420,56 @@ describe("listing data", () => {
         expect(urlButton).toHaveAttribute("href", "http://test.url.com")
 
         expect(getByText("View")).toBeInTheDocument()
+      })
+    })
+
+    describe("should display Verification section", () => {
+      it("section should be hiden when jurisdiction flag is not set", () => {
+        const { queryByText } = render(
+          <AuthContext.Provider
+            value={{
+              profile: { ...user, jurisdictions: [], listings: [] },
+              doJurisdictionsHaveFeatureFlagOn: () => false,
+            }}
+          >
+            <ListingContext.Provider
+              value={{
+                ...listing,
+                isVerified: true,
+              }}
+            >
+              <DetailListingVerification />
+            </ListingContext.Provider>
+          </AuthContext.Provider>
+        )
+
+        expect(queryByText("Verification")).not.toBeInTheDocument()
+        expect(queryByText("I verify that this lisiting data is valid")).not.toBeInTheDocument()
+        expect(queryByText("Yes")).not.toBeInTheDocument()
+      })
+
+      it("should render section when jurisdiction flag is set", () => {
+        const { getByText } = render(
+          <AuthContext.Provider
+            value={{
+              profile: { ...user, jurisdictions: [], listings: [] },
+              doJurisdictionsHaveFeatureFlagOn: () => true,
+            }}
+          >
+            <ListingContext.Provider
+              value={{
+                ...listing,
+                isVerified: true,
+              }}
+            >
+              <DetailListingVerification />
+            </ListingContext.Provider>
+          </AuthContext.Provider>
+        )
+
+        expect(getByText("Verification")).toBeInTheDocument()
+        expect(getByText("I verify that this lisiting data is valid")).toBeInTheDocument()
+        expect(getByText("Yes")).toBeInTheDocument()
       })
     })
   })

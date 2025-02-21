@@ -37,6 +37,7 @@ import DetailCommunityType from "../../../components/listings/PaperListingDetail
 import DetailPrograms from "../../../components/listings/PaperListingDetails/sections/DetailPrograms"
 import DetailListingNotes from "../../../components/listings/PaperListingDetails/sections/DetailNotes"
 import CopyListingDialog from "../../../components/listings/PaperListingForm/dialogs/CopyListingDialog"
+import DetailListingVerification from "../../../components/listings/PaperListingDetails/sections/DetailListingVerification"
 
 interface ListingProps {
   listing: Listing
@@ -117,6 +118,7 @@ export default function ListingDetail(props: ListingProps) {
                     <DetailApplicationTypes />
                     <DetailApplicationAddress />
                     <DetailApplicationDates />
+                    <DetailListingVerification />
                   </div>
 
                   <div className="w-full md:w-3/12 md:pl-6">

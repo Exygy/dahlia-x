@@ -650,6 +650,11 @@ class Listing extends AbstractDTO {
   homeType?: HomeTypeEnum;
 
   @Expose()
+  @IsBoolean({ groups: [ValidationsGroupsEnum.default] })
+  @ApiPropertyOptional()
+  isVerified?: boolean;
+
+  @Expose()
   @ApiPropertyOptional()
   @IsBoolean({ groups: [ValidationsGroupsEnum.default] })
   section8Acceptance?: boolean;
