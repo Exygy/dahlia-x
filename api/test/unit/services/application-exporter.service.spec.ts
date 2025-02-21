@@ -24,6 +24,7 @@ import { Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { GoogleTranslateService } from '../../../src/services/google-translate.service';
 import {
+  constructMultiselectQuestionHeaders,
   getExportHeaders,
   unitTypeToReadable,
 } from '../../../src/utilities/application-export-helpers';
@@ -554,6 +555,107 @@ describe('Testing application export service', () => {
         submissionType: 'electronic',
       });
       expect(stringData).toEqual(undefined);
+    });
+    it('should parse the preference data', async () => {
+      const multiselectQuestionId = randomUUID();
+      const multiselectQuestionId2 = randomUUID();
+      const multiselectQuestion: MultiselectQuestion = {
+        id: multiselectQuestionId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        text: 'first preference title',
+        jurisdictions: [{ id: randomUUID() }],
+        applicationSection:
+          MultiselectQuestionsApplicationSectionEnum.preferences,
+        options: [
+          {
+            text: 'option 1 text',
+            ordinal: 1,
+            collectAddress: true,
+            collectName: true,
+            collectRelationship: true,
+          },
+          {
+            text: 'option 2. text',
+            ordinal: 2,
+            collectAddress: true,
+            collectName: true,
+            collectRelationship: true,
+          },
+          { text: 'option 3 text', ordinal: 2 },
+        ],
+        optOutText: 'I am opting out',
+      };
+      const multiselectQuestion2: MultiselectQuestion = {
+        id: multiselectQuestionId2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        text: 'second. preference title',
+        jurisdictions: [{ id: randomUUID() }],
+        applicationSection:
+          MultiselectQuestionsApplicationSectionEnum.preferences,
+        options: [
+          {
+            text: 'not selected',
+            ordinal: 1,
+          },
+        ],
+        optOutText: 'I am opting out!',
+      };
+      const headers = await constructMultiselectQuestionHeaders(
+        'preferences',
+        'Preference',
+        [multiselectQuestion, multiselectQuestion2],
+      );
+      const application = {
+        preferences: [
+          {
+            multiselectQuestionId: multiselectQuestionId,
+            key: 'second. preference title',
+            claimed: true,
+            options: [
+              { key: 'option 1 text', checked: false },
+              {
+                key: 'option 2. text',
+                checked: true,
+                extraData: [
+                  {
+                    key: 'address',
+                    type: 'address',
+                    value: {
+                      city: 'West Glacier',
+                      state: 'MT',
+                      county: 'Glacier County',
+                      street: '64 Grinnell Dr',
+                      zipCode: '59936',
+                      latitude: 53.7487218,
+                      longitude: -142.0251025,
+                      placeName: 'Glacier National Park',
+                    },
+                  },
+                ],
+              },
+              { key: 'option 3 text', checked: true },
+            ],
+          },
+          {
+            multiselectQuestionId: multiselectQuestionId2,
+            key: 'first preference title',
+            claimed: true,
+            options: [
+              { key: 'not selected', checked: false },
+              { key: 'I am opting out!', checked: true },
+            ],
+          },
+        ],
+      };
+      const { stringData, objectData } =
+        await service.populateDataForEachHeader(headers, application, '');
+
+      expect(objectData).toBe(undefined);
+      expect(stringData).toEqual(
+        '"option 2. text, option 3 text",,,,"64 Grinnell Dr West Glacier, MT 59936",,,"I am opting out!"',
+      );
     });
   });
 });

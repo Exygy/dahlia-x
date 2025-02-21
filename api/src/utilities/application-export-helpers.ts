@@ -442,7 +442,7 @@ export const multiselectQuestionFormat = (
   const selectedOption = question.options.find(
     (option) => option.key === optionText,
   );
-  const extraData = selectedOption?.extraData.find((data) => data.key === key);
+  const extraData = selectedOption?.extraData?.find((data) => data.key === key);
   if (!extraData) {
     return '';
   }
