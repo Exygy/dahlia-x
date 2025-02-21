@@ -80,9 +80,6 @@
         --message-max-width: 100%;
         --message-border-radius: var(--seeds-rounded);
         --common-message-link-gap: 0;
-        @media (--lg-and-up) {
-          --message-padding: var(--seeds-s2) var(--seeds-s2) var(--seeds-s2) var(--seeds-s3);
-        }
         margin-block-start: var(--seeds-s3);
         background-color: var(--seeds-bg-color-surface-primary);
         .primary-color-icon {
@@ -106,24 +103,11 @@
       }
 
       @media (--lg-and-up) {
-        &:first-child {
-          margin-inline-start: var(--seeds-s3);
-        }
         &:not(:last-child) {
           margin-block-end: 0;
         }
         min-width: fit-content;
       }
-    }
-
-    .actions-container {
-      display: flex;
-      width: 100%;
-      justify-content: flex-end;
-      @media (--md-down) {
-        justify-content: flex-start;
-      }
-      margin-block-start: var(--seeds-s3);
     }
 
     .action-show-lg {
@@ -134,19 +118,15 @@
       }
     }
 
-    .action-hide-lg {
+    .action-container {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       margin-block-start: var(--seeds-s3);
-
-      @media (--lg-and-up) {
-        display: none;
-      }
     }
   }
 
-  .link-button::before {
+  .main-link::before {
     content: "";
     position: absolute;
     display: block;

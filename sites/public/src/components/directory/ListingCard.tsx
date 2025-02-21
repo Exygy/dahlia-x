@@ -4,9 +4,9 @@ import { Listing } from "@bloom-housing/shared-helpers/src/types/backend-swagger
 import styles from "./ListingCard.module.scss"
 import { imageUrlFromListing, oneLineAddress } from "@bloom-housing/shared-helpers"
 import { StandardTable, t } from "@bloom-housing/ui-components"
-import { Button, Heading, Icon, Message, Tag } from "@bloom-housing/ui-seeds"
+import { Heading, Icon, Link, Message, Tag } from "@bloom-housing/ui-seeds"
 import { getListingTags } from "../listing/listing_sections/MainDetails"
-import { getListingApplicationStatus, getListingTableData } from "../../lib/helpers"
+import { getListingApplicationStatusSeeds, getListingTableData } from "../../lib/helpers"
 
 export interface ListingCardProps {
   listing: Listing
@@ -15,31 +15,34 @@ export interface ListingCardProps {
 export const ListingCard = ({ listing }: ListingCardProps) => {
   const imageUrl = imageUrlFromListing(listing, parseInt(process.env.listingPhotoSize))[0]
   const listingTags = getListingTags(listing)
-  const status = getListingApplicationStatus(listing)
+  const status = getListingApplicationStatusSeeds(listing)
   const statusContent = []
   if (status?.content) statusContent.push(status.content)
   if (status?.subContent) statusContent.push(status.subContent)
-  // TODO: If favorites, add favorite button
+  // TODO: Add favorites if toggled on
   const actions = [
-    <Button
-      href={`/listing/${listing.id}/${listing.urlSlug}`}
-      size={"sm"}
-      variant={"primary-outlined"}
-      className={`${styles["action-button"]} ${styles["link-button"]}`}
-      ariaLabel={`See details for ${listing.name}`}
-      key={t("t.seeDetails")}
-    >
-      {t("t.seeDetails")}
-    </Button>,
+    // <Button
+    //   onClick={() => favorite()}
+    //   size={"sm"}
+    //   variant={"primary-outlined"}
+    //   className={`${styles["action-button"]}}`}
+    //   ariaLabel={`Favorite ${listing.name}`}
+    //   key={"Favorite"}
+    // >
+    //   Favorite
+    // </Button>,
   ]
 
   return (
     <li className={styles["listing-card-container"]}>
       <div className={styles["listing-card"]}>
         <div className={styles["details"]}>
-          <Heading priority={2} size={"xl"} className={styles["name"]}>
-            {listing.name}
-          </Heading>
+          <Link className={styles["main-link"]} href={`/listing/${listing.id}/${listing.urlSlug}`}>
+            <Heading priority={2} size={"xl"} className={styles["name"]}>
+              {listing.name}
+            </Heading>
+          </Link>
+
           <div className={styles["address"]}>{oneLineAddress(listing.listingsBuildingAddress)}</div>
           {listingTags.length > 0 && (
             <div className={`${styles["tags"]}`}>
@@ -65,7 +68,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
             />
           </div>
 
-          {statusContent.length > 0 ? (
+          {statusContent.length > 0 && (
             <Message
               className={styles["due-date"]}
               customIcon={
@@ -80,16 +83,13 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
                     return <div key={index}>{content}</div>
                   })}
                 </div>
-                <div className={styles["action-show-lg"]}>{actions.map((action) => action)}</div>
               </div>
             </Message>
-          ) : (
-            <div className={`${styles["action-show-lg"]} ${styles["actions-container"]}`}>
-              {actions.map((action) => action)}
-            </div>
           )}
 
-          <div className={styles["action-hide-lg"]}>{actions.map((action) => action)}</div>
+          {actions.length > 0 && (
+            <div className={styles["action-container"]}>{actions.map((action) => action)}</div>
+          )}
         </div>
         <div className={styles["image"]}>
           <div
