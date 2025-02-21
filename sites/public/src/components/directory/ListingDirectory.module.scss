@@ -14,6 +14,8 @@
   max-width: var(--seeds-screen-lg);
   display: flex;
   flex-direction: column;
+  margin-inline: var(--seeds-s2);
+  padding-block: var(--seeds-s4);
   @media (--sm-and-up) {
     margin-inline: var(--seeds-spacer-content);
   }
