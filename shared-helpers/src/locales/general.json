@@ -463,7 +463,7 @@
   "authentication.signIn.mfaError": "This is a partner account, which for security reasons cannot login to the public site.",
   "authentication.signIn.passwordError": "Please enter a valid password",
   "authentication.signIn.passwordOutdated": "Your password has expired. Please reset your password.",
-  "authentication.signIn.pwdless.createAccountCopy": "Sign up quicky with no need to remember any passwords.",
+  "authentication.signIn.pwdless.createAccountCopy": "Sign up quickly with no need to remember any passwords.",
   "authentication.signIn.pwdless.emailHelperText": "Enter your email and we'll send you a code to sign in.",
   "authentication.signIn.pwdless.error": "The code you've used is invalid or expired.",
   "authentication.signIn.pwdless.getCode": "Get code to sign in",
