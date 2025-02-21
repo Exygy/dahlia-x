@@ -22,6 +22,11 @@ describe('Testing script runner service', () => {
   let service: ScriptRunnerService;
   let prisma: PrismaService;
   let emailService: EmailService;
+  let mockConsoleLog;
+
+  beforeEach(() => {
+    mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
+  });
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,6 +48,10 @@ describe('Testing script runner service', () => {
     service = module.get<ScriptRunnerService>(ScriptRunnerService);
     emailService = module.get<EmailService>(EmailService);
     prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterEach(() => {
+    mockConsoleLog.mockRestore();
   });
 
   it('should transfer data', async () => {
@@ -682,6 +691,9 @@ describe('Testing script runner service', () => {
         lotteryOptIn: null,
       },
     });
+    expect(mockConsoleLog).toHaveBeenCalledWith(
+      'updated lottery opt in for 1 listings',
+    );
   });
 
   it('should hide programs from listing detail page', async () => {
@@ -769,6 +781,9 @@ describe('Testing script runner service', () => {
       },
     });
     expect(prisma.featureFlags.create).toHaveBeenCalledTimes(16);
+    expect(mockConsoleLog).toHaveBeenCalledWith(
+      'Number of feature flags created: 16',
+    );
   });
 
   // | ---------- HELPER TESTS BELOW ---------- | //
