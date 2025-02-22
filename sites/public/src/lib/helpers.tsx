@@ -12,6 +12,7 @@ import {
   getSummariesTable,
   IMAGE_FALLBACK_URL,
   cleanMultiselectString,
+  getStackedSummariesTable,
 } from "@bloom-housing/shared-helpers"
 import {
   Address,
@@ -61,6 +62,12 @@ export const getListingTableData = (
 ) => {
   return unitsSummarized !== undefined
     ? getSummariesTable(unitsSummarized.byUnitTypeAndRent, listingReviewOrder)
+    : []
+}
+
+export const getListingStackedTableData = (unitsSummarized: UnitsSummarized) => {
+  return unitsSummarized !== undefined
+    ? getStackedSummariesTable(unitsSummarized.byUnitTypeAndRent)
     : []
 }
 

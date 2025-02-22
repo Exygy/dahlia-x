@@ -3,12 +3,11 @@
     margin-block-end: var(--seeds-spacer-content);
   }
   .listing-card-container {
-    // &:not(:first-child) {
-    //   @media (--md-and-up) {
-    //     padding-block-start: var(--seeds-spacer-content);
-    //   }
-    // }
     position: relative;
+
+    @media (--sm-only) {
+      --card-spacing: var(--card-spacing-sm);
+    }
 
     &:hover {
       box-shadow: 0px 0px 3px 3px var(--seeds-border-color);
@@ -136,6 +135,28 @@
       top: 0;
       right: 0;
       bottom: 0;
+    }
+  }
+
+  // Temporary until we have Seeds tables
+  [class*="stacked-table"] {
+    text-transform: none;
+    --bloom-font-size-base: var(--seeds-type-label-size);
+    tr {
+      background-color: var(--seeds-bg-color-canvas);
+    }
+    th {
+      background-color: white;
+      padding-block: var(--seeds-s1);
+      padding-inline: var(--seeds-s2);
+      letter-spacing: normal;
+    }
+    td {
+      padding: var(--seeds-s2);
+    }
+    td,
+    th {
+      font-size: var(--seeds-type-caption-size);
     }
   }
 }

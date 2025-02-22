@@ -3,10 +3,10 @@ import InfoIcon from "@heroicons/react/24/solid/InformationCircleIcon"
 import { Listing } from "@bloom-housing/shared-helpers/src/types/backend-swagger"
 import styles from "./ListingCard.module.scss"
 import { imageUrlFromListing, oneLineAddress } from "@bloom-housing/shared-helpers"
-import { StandardTable, t } from "@bloom-housing/ui-components"
+import { StackedTable, t } from "@bloom-housing/ui-components"
 import { Card, Heading, Icon, Link, Message, Tag } from "@bloom-housing/ui-seeds"
 import { getListingTags } from "../listing/listing_sections/MainDetails"
-import { getListingApplicationStatusSeeds, getListingTableData } from "../../lib/helpers"
+import { getListingApplicationStatusSeeds, getListingStackedTableData } from "../../lib/helpers"
 
 export interface ListingCardProps {
   listing: Listing
@@ -63,15 +63,13 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
                 </div>
               )}
               <div className={styles["unit-table"]}>
-                <StandardTable
+                <StackedTable
                   headers={{
                     unitType: "t.unitType",
                     minimumIncome: "t.minimumIncome",
                     rent: "t.rent",
                   }}
-                  data={getListingTableData(listing.unitsSummarized, listing.reviewOrderType)}
-                  responsiveCollapse={true}
-                  cellClassName={"px-5 py-3"}
+                  stackedData={getListingStackedTableData(listing.unitsSummarized)}
                 />
               </div>
 
