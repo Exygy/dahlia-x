@@ -242,10 +242,10 @@ export const stackedUnitSummariesTable = (
     }
     if (ranges.minPercentageRent !== null && ranges.maxPercentageRent !== null) {
       if (ranges.minPercentageRent === ranges.maxPercentageRent) {
-        if (rentText) rentText = rentText + ", "
+        if (rentText) rentText = rentText + " / "
         rentText = rentText + `${ranges.minPercentageRent}% ${t("t.income")}`
       } else {
-        if (rentText) rentText = rentText + ", "
+        if (rentText) rentText = rentText + " / "
         rentText =
           rentText +
           `${ranges.minPercentageRent}% ${t("t.to")} ${ranges.maxPercentageRent}% ${t("t.income")}`
