@@ -442,10 +442,10 @@ describe('Testing application export service', () => {
 
   describe('populateDataForEachHeader', () => {
     it('should populate the data for each header and output a string', async () => {
-      const headers = await getExportHeaders(0, [], process.env.TIME_ZONE);
+      const headers = await getExportHeaders(0, [], 'America/Los_Angeles');
       const id = randomUUID();
       const application = mockApplication({
-        date: new Date('December 5, 2024 03:24:00'),
+        date: new Date('December 5, 2024 03:24:00 PST'),
         position: 1,
         id,
         includeFlagSets: true,
@@ -455,14 +455,14 @@ describe('Testing application export service', () => {
 
       expect(objectData).toBe(undefined);
       expect(stringData).toEqual(
-        `"${id.toString()}","confirmationCode 1","electronic","12-05-2024 01:24:00AM PST","application 1 firstName","application 1 middleName","application 1 lastName","application 1 birthDay","application 1 birthMonth","application 1 birthYear","application 1 emailaddress","application 1 phoneNumber","application 1 phoneNumberType","additionalPhoneNumber 1",,"application 1 applicantAddress street","application 1 applicantAddress street2","application 1 applicantAddress city","application 1 applicantAddress state","application 1 applicantAddress zipCode","application 1 mailingAddress street","application 1 mailingAddress street2","application 1 mailingAddress city","application 1 mailingAddress state","application 1 mailingAddress zipCode","application 1 applicantWorkAddress street","application 1 applicantWorkAddress street2","application 1 applicantWorkAddress city","application 1 applicantWorkAddress state","application 1 applicantWorkAddress zipCode","application 1 alternateContact firstName","application 1 alternateContact lastName","application 1 alternateContact type","application 1 alternateContact agency","application 1 alternateContact otherType","application 1 alternatecontact emailaddress","application 1 alternateContact phoneNumber","application 1 alternateContact address street","application 1 alternateContact address street2","application 1 alternateContact address city","application 1 alternateContact address state","application 1 alternateContact address zipCode","income 1","per month",,,,"true","true","true","Studio,One Bedroom","1","true","true"`,
+        `"${id.toString()}","confirmationCode 1","electronic","12-05-2024 03:24:00AM PST","application 1 firstName","application 1 middleName","application 1 lastName","application 1 birthDay","application 1 birthMonth","application 1 birthYear","application 1 emailaddress","application 1 phoneNumber","application 1 phoneNumberType","additionalPhoneNumber 1",,"application 1 applicantAddress street","application 1 applicantAddress street2","application 1 applicantAddress city","application 1 applicantAddress state","application 1 applicantAddress zipCode","application 1 mailingAddress street","application 1 mailingAddress street2","application 1 mailingAddress city","application 1 mailingAddress state","application 1 mailingAddress zipCode","application 1 applicantWorkAddress street","application 1 applicantWorkAddress street2","application 1 applicantWorkAddress city","application 1 applicantWorkAddress state","application 1 applicantWorkAddress zipCode","application 1 alternateContact firstName","application 1 alternateContact lastName","application 1 alternateContact type","application 1 alternateContact agency","application 1 alternateContact otherType","application 1 alternatecontact emailaddress","application 1 alternateContact phoneNumber","application 1 alternateContact address street","application 1 alternateContact address street2","application 1 alternateContact address city","application 1 alternateContact address state","application 1 alternateContact address zipCode","income 1","per month",,,,"true","true","true","Studio,One Bedroom","1","true","true"`,
       );
     });
     it('should populate the data for each header and output a string', async () => {
-      const headers = await getExportHeaders(0, [], process.env.TIME_ZONE);
+      const headers = await getExportHeaders(0, [], 'America/Los_Angeles');
       const id = randomUUID();
       const application = mockApplication({
-        date: new Date('December 5, 2024 03:24:00'),
+        date: new Date('December 5, 2024 03:24:00 PST'),
         position: 1,
         id,
         includeFlagSets: true,
@@ -551,7 +551,7 @@ describe('Testing application export service', () => {
         incomeVouchers: 'true',
         markedAsDuplicate: 'true',
         preferredUnitTypes: 'Studio,One Bedroom',
-        submissionDate: '12-05-2024 01:24:00AM PST',
+        submissionDate: '12-05-2024 03:24:00AM PST',
         submissionType: 'electronic',
       });
       expect(stringData).toEqual(undefined);
