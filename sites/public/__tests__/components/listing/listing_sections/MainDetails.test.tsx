@@ -22,19 +22,6 @@ describe("<MainDetails>", () => {
     expect(getByText(listing.developer)).toBeDefined()
     expect(getByAltText("A picture of the building")).toBeDefined()
   })
-  it("shows no tags", () => {
-    const { queryByTestId } = render(
-      <MainDetails
-        listing={{
-          ...listing,
-          reviewOrderType: ReviewOrderTypeEnum.lottery,
-          reservedCommunityTypes: null,
-        }}
-        dueDateContent={[]}
-      />
-    )
-    expect(queryByTestId("listing-tags")).toBeNull()
-  })
   it("shows reserved tag", () => {
     const { getByTestId, getAllByText } = render(
       <MainDetails
@@ -49,7 +36,20 @@ describe("<MainDetails>", () => {
     expect(getByTestId("listing-tags")).toBeDefined()
     expect(getAllByText("Veteran").length).toBeGreaterThan(0)
   })
-  it("shows units available tag", () => {
+  it("shows units available tag for lottery", () => {
+    const { getByTestId, getByText } = render(
+      <MainDetails
+        listing={{
+          ...listing,
+          reviewOrderType: ReviewOrderTypeEnum.lottery,
+        }}
+        dueDateContent={[]}
+      />
+    )
+    expect(getByTestId("listing-tags")).toBeDefined()
+    expect(getByText("Available Units")).toBeDefined()
+  })
+  it("shows units available tag for fcfs", () => {
     const { getByTestId, getByText } = render(
       <MainDetails
         listing={{

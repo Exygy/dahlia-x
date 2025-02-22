@@ -10,7 +10,7 @@ import { t } from "@bloom-housing/ui-components"
 import { pdfUrlFromListingEvents } from "@bloom-housing/shared-helpers"
 import { Heading } from "@bloom-housing/ui-seeds"
 import { ErrorPage } from "../../pages/_error"
-import { getListingApplicationStatus } from "../../lib/helpers"
+import { getListingApplicationStatusSeeds } from "../../lib/helpers"
 import {
   getAdditionalInformation,
   getAmiValues,
@@ -62,7 +62,7 @@ export const ListingViewSeeds = ({ jurisdiction, listing, preview }: ListingProp
     "paperApplicationLanguage",
     paperApplications?.length ? paperApplications[0].fileURL : undefined
   )
-  const statusContent = getListingApplicationStatus(listing)
+  const statusContent = getListingApplicationStatusSeeds(listing)
 
   const OpenHouses = (
     <DateSection

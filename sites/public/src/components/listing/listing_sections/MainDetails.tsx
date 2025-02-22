@@ -42,8 +42,14 @@ export const getListingTags = (listing: Listing): ListingTag[] => {
   }
   if (listing.reviewOrderType === ReviewOrderTypeEnum.firstComeFirstServe) {
     listingTags.push({
-      title: t("listings.availableUnits"),
-      variant: "primary",
+      title: t("listings.applicationFCFS"),
+      variant: "success",
+    })
+  }
+  if (listing.reviewOrderType === ReviewOrderTypeEnum.lottery) {
+    listingTags.push({
+      title: "Lottery",
+      variant: "highlight-cool",
     })
   }
   return listingTags

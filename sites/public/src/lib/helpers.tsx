@@ -12,6 +12,7 @@ import {
   getSummariesTable,
   IMAGE_FALLBACK_URL,
   cleanMultiselectString,
+  getStackedSummariesTable,
 } from "@bloom-housing/shared-helpers"
 import {
   Address,
@@ -55,12 +56,18 @@ const getListingCardSubtitle = (address: Address) => {
   return address ? `${street}, ${city} ${state}, ${zipCode}` : null
 }
 
-const getListingTableData = (
+export const getListingTableData = (
   unitsSummarized: UnitsSummarized,
   listingReviewOrder: ReviewOrderTypeEnum
 ) => {
   return unitsSummarized !== undefined
     ? getSummariesTable(unitsSummarized.byUnitTypeAndRent, listingReviewOrder)
+    : []
+}
+
+export const getListingStackedTableData = (unitsSummarized: UnitsSummarized) => {
+  return unitsSummarized !== undefined
+    ? getStackedSummariesTable(unitsSummarized.byUnitTypeAndRent)
     : []
 }
 
@@ -95,7 +102,7 @@ export const getListingApplicationStatus = (listing: Listing): StatusBarType => 
     }
   }
 
-  if (formattedDate != "") {
+  if (formattedDate !== "") {
     content = content + `: ${formattedDate}`
   }
 
@@ -104,10 +111,61 @@ export const getListingApplicationStatus = (listing: Listing): StatusBarType => 
     content = t("listings.applicationFCFS")
   }
 
+  if (
+    listing.reviewOrderType === ReviewOrderTypeEnum.waitlist &&
+    listing.status !== ListingsStatusEnum.closed
+  ) {
+    subContent = content
+    content = t("listings.applicationOpenPeriod")
+  }
+
   return {
     status,
     content,
     subContent,
+  }
+}
+
+export const getListingApplicationStatusSeeds = (listing: Listing): StatusBarType => {
+  if (!listing) return
+  let content = ""
+  let formattedDate = ""
+  let status = ApplicationStatusType.Open
+
+  if (openInFuture(listing)) {
+    const date = listing.applicationOpenDate
+    const openDate = dayjs(date)
+    formattedDate = openDate.format("MMM D, YYYY")
+    content = t("listings.applicationOpenPeriod")
+  } else {
+    if (listing.status === ListingsStatusEnum.closed) {
+      status = ApplicationStatusType.Closed
+      content = t("listings.applicationsClosed")
+    } else if (listing.applicationDueDate) {
+      const dueDate = dayjs(listing.applicationDueDate)
+      formattedDate = dueDate.format("MMM DD, YYYY")
+      formattedDate = formattedDate + ` ${t("t.at")} ` + dueDate.format("h:mmA")
+
+      // if due date is in future, listing is open
+      if (dayjs() < dueDate) {
+        content = t("listings.applicationDeadline")
+      } else {
+        status = ApplicationStatusType.Closed
+        content = t("listings.applicationsClosed")
+      }
+    } else {
+      content = t("listings.applicationOpenPeriod")
+    }
+  }
+
+  if (formattedDate !== "") {
+    content = content + `: ${formattedDate}`
+  }
+
+  return {
+    status,
+    content,
+    subContent: "",
   }
 }
 

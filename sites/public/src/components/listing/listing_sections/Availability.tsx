@@ -55,7 +55,9 @@ export const Availability = ({
 }: AvailabilityProps) => {
   if (status === ListingsStatusEnum.closed && !reservedCommunityType) return
   return (
-    <Card className={`${listingStyles["muted-card"]} ${listingStyles["mobile-full-width-card"]}`}>
+    <Card
+      className={`${listingStyles["muted-card"]} ${listingStyles["mobile-full-width-card"]} seeds-m-bs-content`}
+    >
       {reservedCommunityType && (
         <Card.Section divider="inset">
           <HeadingGroup

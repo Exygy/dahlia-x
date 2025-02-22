@@ -1,9 +1,9 @@
 .layout-max-width-container {
-  margin-block: var(--seeds-s6);
+  margin-block: var(--seeds-spacer-content);
   padding-inline: var(--seeds-s4);
 
   @media (--md-and-up) {
-    margin-block: var(--seeds-s12);
+    margin-block: var(--seeds-spacer-container);
   }
 
   p:not(:last-child) {
