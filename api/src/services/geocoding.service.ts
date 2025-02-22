@@ -191,7 +191,7 @@ export class GeocodingService {
       mapLayers: MapLayers[],
     ): ApplicationMultiselectQuestionOption[] => {
       const preferenceOptions = [];
-      preference.options.forEach((option) => {
+      preference.options?.forEach((option) => {
         const addressData = option.extraData?.find(
           (data) => data.type === InputType.address,
         );

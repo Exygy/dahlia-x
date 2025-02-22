@@ -2021,7 +2021,7 @@
     tailwindcss-rtl "^0.9.0"
     typesafe-actions "^5.1.0"
 
-"@bloom-housing/ui-seeds@^1.19.0":
+"@bloom-housing/ui-seeds@1.19.0":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@bloom-housing/ui-seeds/-/ui-seeds-1.19.0.tgz#c5e41f6fa99ed33c933efc0e8b6163fa16a35435"
   integrity sha512-uNPR6ywmSiFdypRcMHfI+jO/Zy7qeSG1cofkP2tzVFi2dF3sMza5G6IXUZ0fMAFq4hzIvKauuI8b+ikXTmQgIQ==

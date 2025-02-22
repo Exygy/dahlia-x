@@ -250,88 +250,16 @@ export class ApplicationExporterService {
                       b.applicationLotteryPositions[0].ordinal,
                   );
                 }
-                let row = '';
+                let data = '';
                 paginatedApplications.forEach((app) => {
-                  let preferences: ApplicationMultiselectQuestion[];
-                  let programs: ApplicationMultiselectQuestion[];
-                  csvHeaders.forEach((header, index) => {
-                    let multiselectQuestionValue = false;
-                    let parsePreference = false;
-                    let parseProgram = false;
-                    let value = header.path.split('.').reduce((acc, curr) => {
-                      // return preference/program as value for the format function to accept
-                      if (multiselectQuestionValue) {
-                        return acc;
-                      }
-
-                      if (parsePreference) {
-                        // curr should equal the preference id we're pulling from
-                        if (!preferences) {
-                          preferences =
-                            app.preferences as unknown as ApplicationMultiselectQuestion[];
-                        }
-                        parsePreference = false;
-                        // there aren't typically many preferences, but if there, then a object map should be created and used
-                        const preference = preferences.find(
-                          (preference) => preference.key === curr,
-                        );
-                        multiselectQuestionValue = true;
-                        return preference;
-                      } else if (parseProgram) {
-                        // curr should equal the preference id we're pulling from
-                        if (!programs) {
-                          programs =
-                            (app.programs as unknown as ApplicationMultiselectQuestion[]) ||
-                            [];
-                        }
-                        parsePreference = false;
-                        // there aren't typically many programs, but if there, then a object map should be created and used
-                        const program = programs.find(
-                          (prog) => prog.key === curr,
-                        );
-                        multiselectQuestionValue = true;
-                        return program;
-                      }
-
-                      // sets parsePreference to true, for the next iteration
-                      if (curr === 'preferences') {
-                        parsePreference = true;
-                      } else if (curr === 'programs') {
-                        parseProgram = true;
-                      }
-
-                      if (acc === null || acc === undefined) {
-                        return '';
-                      }
-
-                      // handles working with arrays, e.g. householdMember.0.firstName
-                      if (!isNaN(Number(curr))) {
-                        const index = Number(curr);
-                        return acc[index];
-                      }
-
-                      return acc[curr];
-                    }, app);
-                    if (value === undefined) {
-                      value = '';
-                    } else if (value === null) {
-                      value = '';
-                    }
-
-                    if (header.format) {
-                      value = header.format(value);
-                    }
-
-                    row += value
-                      ? `"${value.toString().replace(/"/g, `""`)}"`
-                      : '';
-                    if (index < csvHeaders.length - 1) {
-                      row += ',';
-                    }
-                  });
-                  row += '\n';
+                  const { stringData } = this.populateDataForEachHeader(
+                    csvHeaders,
+                    app,
+                    data,
+                  );
+                  data = stringData + '\n';
                 });
-                resolve(row);
+                resolve(data);
               }),
             );
           }
@@ -351,6 +279,104 @@ export class ApplicationExporterService {
           writableStream.end();
         });
     });
+  }
+
+  /**
+   *
+   * @param csvHeaders the headers and renderers of the csv
+   * @param application the application to get data from
+   * @param stringData The existing string data for the output. used for CSV
+   * @param objectData The existing object data for the output. used for spreadsheet
+   * @returns
+   */
+  populateDataForEachHeader(
+    csvHeaders: CsvHeader[],
+    application,
+    stringData?: string,
+    objectData?,
+  ): { stringData: string; objectData: any } {
+    let preferences: ApplicationMultiselectQuestion[];
+    let programs: ApplicationMultiselectQuestion[];
+    csvHeaders.forEach((header, index) => {
+      let multiselectQuestionValue = false;
+      let parsePreference = false;
+      let parseProgram = false;
+      let value = header.path.split('.').reduce((acc, curr) => {
+        // return preference/program as value for the format function to accept
+        if (multiselectQuestionValue) {
+          return acc;
+        }
+
+        if (parsePreference) {
+          // curr should equal the preference id we're pulling from
+          if (!preferences) {
+            preferences =
+              (application.preferences as unknown as ApplicationMultiselectQuestion[]) ||
+              [];
+          }
+          parsePreference = false;
+          // there aren't typically many preferences, but if there, then a object map should be created and used
+          const preference = preferences.find(
+            (preference) => preference.multiselectQuestionId === curr,
+          );
+          multiselectQuestionValue = true;
+          return preference;
+        } else if (parseProgram) {
+          // curr should equal the preference id we're pulling from
+          if (!programs) {
+            programs =
+              (application.programs as unknown as ApplicationMultiselectQuestion[]) ||
+              [];
+          }
+          parsePreference = false;
+          // there aren't typically many programs, but if there, then a object map should be created and used
+          const program = programs.find(
+            (prog) => prog.multiselectQuestionId === curr,
+          );
+          multiselectQuestionValue = true;
+          return program;
+        }
+
+        // sets parsePreference to true, for the next iteration
+        if (curr === 'preferences') {
+          parsePreference = true;
+        } else if (curr === 'programs') {
+          parseProgram = true;
+        }
+
+        if (acc === null || acc === undefined) {
+          return '';
+        }
+
+        // handles working with arrays, e.g. householdMember.0.firstName
+        if (!isNaN(Number(curr))) {
+          const index = Number(curr);
+          return acc[index];
+        }
+
+        return acc[curr];
+      }, application);
+      if (value === undefined) {
+        value = '';
+      } else if (value === null) {
+        value = '';
+      }
+
+      if (header.format) {
+        value = header.format(value);
+      }
+
+      if (stringData !== undefined) {
+        stringData += value ? `"${value.toString().replace(/"/g, `""`)}"` : '';
+        if (index < csvHeaders.length - 1) {
+          stringData += ',';
+        }
+      }
+      if (objectData !== undefined) {
+        objectData[`${header.path}`] = value ? value.toString() : '';
+      }
+    });
+    return { stringData, objectData };
   }
 
   // spreadsheet export functions
@@ -594,83 +620,21 @@ export class ApplicationExporterService {
       }
 
       paginatedApplications.forEach((app) => {
-        const rowData = {};
-        let preferences: ApplicationMultiselectQuestion[];
-        let programs: ApplicationMultiselectQuestion[];
+        const data = {};
 
         if (preference) {
-          rowData['Raw Lottery Rank'] = slicedApplications.find(
+          data['Raw Lottery Rank'] = slicedApplications.find(
             (slicedApp) => slicedApp.id === app.id,
           ).applicationLotteryPositions[0].ordinal;
         }
 
-        csvHeaders.forEach((header) => {
-          let multiselectQuestionValue = false;
-          let parsePreference = false;
-          let parseProgram = false;
-          let value = header.path.split('.').reduce((acc, curr) => {
-            // return preference/program as value for the format function to accept
-            if (multiselectQuestionValue) {
-              return acc;
-            }
-
-            if (parsePreference) {
-              // curr should equal the preference id we're pulling from
-              if (!preferences) {
-                preferences =
-                  (app.preferences as unknown as ApplicationMultiselectQuestion[]) ||
-                  [];
-              }
-              parsePreference = false;
-              // there aren't typically many preferences, but if there, then a object map should be created and used
-              const preference = preferences.find(
-                (preference) => preference.key === curr,
-              );
-              multiselectQuestionValue = true;
-              return preference;
-            } else if (parseProgram) {
-              // curr should equal the preference id we're pulling from
-              if (!programs) {
-                programs =
-                  (app.programs as unknown as ApplicationMultiselectQuestion[]) ||
-                  [];
-              }
-              parsePreference = false;
-              // there aren't typically many programs, but if there, then a object map should be created and used
-              const program = programs.find(
-                (preference) => preference.key === curr,
-              );
-              multiselectQuestionValue = true;
-              return program;
-            }
-
-            // sets parsePreference to true, for the next iteration
-            if (curr === 'preferences') {
-              parsePreference = true;
-            } else if (curr === 'programs') {
-              parseProgram = true;
-            }
-
-            if (acc === null || acc === undefined) {
-              return '';
-            }
-
-            // handles working with arrays, e.g. householdMember.0.firstName
-            if (!isNaN(Number(curr))) {
-              const index = Number(curr);
-              return acc[index];
-            }
-
-            return acc[curr];
-          }, app);
-          value = value === undefined ? '' : value === null ? '' : value;
-          if (header.format) {
-            value = header.format(value);
-          }
-
-          rowData[`${header.path}`] = value ? value.toString() : '';
-        });
-        spreadsheet.addRow(rowData).commit();
+        const { objectData } = this.populateDataForEachHeader(
+          csvHeaders,
+          app,
+          undefined,
+          data,
+        );
+        spreadsheet.addRow(objectData).commit();
       });
     }
     spreadsheet.commit();
