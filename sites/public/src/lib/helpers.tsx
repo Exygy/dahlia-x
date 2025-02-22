@@ -129,7 +129,6 @@ export const getListingApplicationStatus = (listing: Listing): StatusBarType => 
 export const getListingApplicationStatusSeeds = (listing: Listing): StatusBarType => {
   if (!listing) return
   let content = ""
-  let subContent = ""
   let formattedDate = ""
   let status = ApplicationStatusType.Open
 
@@ -154,6 +153,8 @@ export const getListingApplicationStatusSeeds = (listing: Listing): StatusBarTyp
         status = ApplicationStatusType.Closed
         content = t("listings.applicationsClosed")
       }
+    } else {
+      content = t("listings.applicationOpenPeriod")
     }
   }
 
@@ -161,19 +162,10 @@ export const getListingApplicationStatusSeeds = (listing: Listing): StatusBarTyp
     content = content + `: ${formattedDate}`
   }
 
-  if (
-    (listing.reviewOrderType === ReviewOrderTypeEnum.waitlist ||
-      listing.reviewOrderType === ReviewOrderTypeEnum.firstComeFirstServe) &&
-    listing.status !== ListingsStatusEnum.closed
-  ) {
-    subContent = content
-    content = t("listings.applicationOpenPeriod")
-  }
-
   return {
     status,
     content,
-    subContent,
+    subContent: "",
   }
 }
 
